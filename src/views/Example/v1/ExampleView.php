@@ -2,9 +2,9 @@
 
 namespace php_rest\views\Example\v1;
 
-use php_rest\interfaces\ViewIF;
-use php_rest\interfaces\ResponseIF;
-use php_rest\interfaces\RequestIF;
+use php_rest\src\interfaces\ViewIF;
+use php_rest\src\interfaces\ResponseIF;
+use php_rest\src\interfaces\RequestIF;
 
 
 class ExampleView implements ViewIF
