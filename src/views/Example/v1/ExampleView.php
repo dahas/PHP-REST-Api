@@ -14,6 +14,34 @@ class ExampleView implements ViewIF
 
     private $allowedRequestMethods = ["GET", "POST", "PUT", "DELETE"];
 
+    // GET
+    private function read()
+    {
+        // ToDO
+        return true;
+    }
+
+    // POST
+    private function create()
+    {
+        // ToDO
+        return true;
+    }
+
+    // PUT
+    private function update()
+    {
+        // ToDO
+        return true;
+    }
+
+    // DELETE
+    private function delete()
+    {
+        // ToDO
+        return true;
+    }
+
     /**
      * @param RequestIF $request The Request Handler
      * @param ResponseIF $response The Response Handler
@@ -78,34 +106,6 @@ class ExampleView implements ViewIF
                 return null;
                 break;
         }
-    }
-
-    // GET
-    private function read()
-    {
-        // ToDO
-        return true;
-    }
-
-    // POST
-    private function create()
-    {
-        // ToDO
-        return true;
-    }
-
-    // PUT
-    private function update()
-    {
-        // ToDO
-        return true;
-    }
-
-    // DELETE
-    private function delete()
-    {
-        // ToDO
-        return true;
     }
 
     // Helper Functions

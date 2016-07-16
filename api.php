@@ -12,10 +12,10 @@ function autoloader($class)
 
 spl_autoload_register(__NAMESPACE__ . '\autoloader');
 
-use php_rest\controller\FilesController;
-use php_rest\controller\RequestController;
-use php_rest\controller\ResponseController;
-use php_rest\controller\OutputController;
+use php_rest\src\controller\FilesController;
+use php_rest\src\controller\RequestController;
+use php_rest\src\controller\ResponseController;
+use php_rest\src\controller\OutputController;
 
 $filesHandler = new FilesController();
 $controller = new OutputController($filesHandler);

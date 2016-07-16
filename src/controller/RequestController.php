@@ -1,8 +1,8 @@
 <?php
 
-namespace php_rest\controller;
+namespace php_rest\src\controller;
 
-use php_rest\interfaces\RequestIF;
+use php_rest\src\interfaces\RequestIF;
 
 class RequestController implements RequestIF
 {

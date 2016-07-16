@@ -1,6 +1,6 @@
 <?php
 
-namespace php_rest\interfaces;
+namespace php_rest\src\interfaces;
 
 interface FilesIF
 {

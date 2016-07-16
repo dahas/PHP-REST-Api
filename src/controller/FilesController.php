@@ -1,10 +1,10 @@
 <?php
 
-namespace php_rest\controller;
+namespace php_rest\src\controller;
 
-use php_rest\interfaces\FilesIF;
-use php_rest\interfaces\RequestIF;
-use php_rest\interfaces\ViewIF;
+use php_rest\src\interfaces\FilesIF;
+use php_rest\src\interfaces\RequestIF;
+use php_rest\src\interfaces\ViewIF;
 
 class FilesController implements FilesIF
 {

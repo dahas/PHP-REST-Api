@@ -1,8 +1,8 @@
 <?php
 
-namespace php_rest\controller;
+namespace php_rest\src\controller;
 
-use php_rest\interfaces\ResponseIF;
+use php_rest\src\interfaces\ResponseIF;
 
 class ResponseController implements ResponseIF
 {
