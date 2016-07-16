@@ -17,7 +17,7 @@ class ExampleView implements ViewIF
     // GET
     private function read()
     {
-        // ToDO
+        // To be done
         return true;
     }
 
