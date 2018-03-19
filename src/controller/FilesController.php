@@ -8,7 +8,8 @@ use php_rest\src\interfaces\ViewIF;
 
 class FilesController implements FilesIF
 {
-    private $path = 'php_rest/views';
+    private $fPath = 'src/views';
+    private $cPath = 'php_rest\src\views';
 
     public function getView(RequestIF $request)
     {
@@ -25,10 +26,13 @@ class FilesController implements FilesIF
 
     protected function loadView($viewVersion, $viewName)
     {
-        $class = str_replace("/", "\\", $this->path) . "\\{$viewName}\\{$viewVersion}\\{$viewName}View";
-        $file = "{$this->path}/{$viewName}/{$viewVersion}/{$viewName}View.php";
+        $class = $this->cPath . "\\{$viewName}\\{$viewVersion}\\{$viewName}View";
+        $file = "{$this->fPath}/{$viewName}/{$viewVersion}/{$viewName}View.php";
 
-        if (!file_exists($file) || !class_exists($class))
+        $fExists = file_exists($file);
+        $cExists = class_exists($class);
+
+        if (!$fExists || !$cExists)
             return false;
 
         return new $class();

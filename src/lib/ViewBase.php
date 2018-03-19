@@ -1,53 +1,17 @@
 <?php
 
-namespace php_rest\src\views\Example\v1;
+namespace php_rest\src\lib;
 
-use php_rest\src\interfaces\ViewIF;
 use php_rest\src\interfaces\ResponseIF;
 use php_rest\src\interfaces\RequestIF;
+use php_rest\src\interfaces\ViewIF;
 
-
-class ExampleView implements ViewIF
+class ViewBase implements ViewIF
 {
     private $request;
     private $response;
 
     private $allowedRequestMethods = ["GET", "POST", "PUT", "DELETE"];
-
-    // GET
-    private function read()
-    {
-        echo json_encode(
-            [
-                "This" => "aaaaa",
-                "Is" => "bbbbb",
-                "Awesome" => "ccccc"
-            ]
-        );
-        // To be done
-        return true;
-    }
-
-    // POST
-    private function create()
-    {
-        // ToDO
-        return true;
-    }
-
-    // PUT
-    private function update()
-    {
-        // ToDO
-        return true;
-    }
-
-    // DELETE
-    private function delete()
-    {
-        // ToDO
-        return true;
-    }
 
     /**
      * @param RequestIF $request The Request Handler
@@ -171,4 +135,5 @@ class ExampleView implements ViewIF
     {
         return implode(", ", $this->allowedRequestMethods);
     }
+
 }

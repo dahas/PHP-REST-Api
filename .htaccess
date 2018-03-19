@@ -1,0 +1,12 @@
+# REWRITE: /API_VERSION/LIST_ENTRIES/ENTRY_ID/LIST_RELATED_DATA
+
+RewriteEngine On
+
+# List of all entries
+RewriteRule ^([^/]*)/([^/]*)$ /api.php?version=$1&view=$2 [L,QSA]
+
+# A single entry of the list
+RewriteRule ^([^/]*)/([^/]*)/([^/]*)$ /api.php?version=$1&view=$2&entry_id=$3 [L,QSA]
+
+# List of subentries related to a single entry
+RewriteRule ^([^/]*)/([^/]*)/([^/]*)/([^/]*)$ /api.php?version=$1&view=$2&entry_id=$3&module=$4 [L,QSA]
