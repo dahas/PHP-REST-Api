@@ -19,6 +19,10 @@ class ExampleView implements ViewIF
     private function read($request=null, $response=null)
     {
         if (! $db = Database::getInstance()) {
+            echo json_encode([
+                "status" => "error",
+                "message" => "No database found."
+            ]);
             return false;
         }
 
@@ -72,6 +76,10 @@ class ExampleView implements ViewIF
     private function create($request=null, $response=null)
     {
         if (! $db = Database::getInstance()) {
+            echo json_encode([
+                "status" => "error",
+                "message" => "No database found."
+            ]);
             return false;
         }
 
@@ -118,6 +126,18 @@ class ExampleView implements ViewIF
     private function update($request=null, $response=null)
     {
         if (! $db = Database::getInstance()) {
+            echo json_encode([
+                "status" => "error",
+                "message" => "No database found."
+            ]);
+            return false;
+        }
+
+        if (! $request->getParameter("uid")) {
+            echo json_encode([
+                "status" => "error",
+                "message" => "Please provide a unique ID."
+            ]);
             return false;
         }
 
@@ -165,6 +185,18 @@ class ExampleView implements ViewIF
     private function delete($request=null, $response=null)
     {
         if (! $db = Database::getInstance()) {
+            echo json_encode([
+                "status" => "error",
+                "message" => "No database found."
+            ]);
+            return false;
+        }
+
+        if (! $request->getParameter("uid")) {
+            echo json_encode([
+                "status" => "error",
+                "message" => "Please provide a unique ID."
+            ]);
             return false;
         }
 
