@@ -94,9 +94,7 @@ class ExampleView implements ViewIF
         if (! $uid) {
             echo json_encode([
                 "status" => "error",
-                "message" => "Query could not be executed!",
-                "insert_id" => $uid,
-                "data" => $data
+                "message" => "Query could not be executed!"
             ]);
 
             return false;
