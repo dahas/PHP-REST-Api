@@ -59,8 +59,6 @@ class ExampleView implements ViewIF
             ]);
         }
 
-        
-
         $response->addHeader("X-Data-Count", $affectedRows);
 
         return true;
