@@ -10,9 +10,13 @@ class RequestController implements RequestIF
 
     public function __construct()
     {
-        if ($this->getMethod() != "GET" && $this->getMethod() != "POST")
+        $rq = $_REQUEST;
+        if ($this->getMethod() == "PUT" || $this->getMethod() == "PATCH") {
             parse_str(file_get_contents("php://input"), $_REQUEST);
-        $this->parameters = $_REQUEST;
+            $rq = array_merge($rq, $_REQUEST); // Merging GET and PUT/PATCH data
+        }
+        
+        $this->parameters = $rq;
     }
 
     public function issetParameter($name)

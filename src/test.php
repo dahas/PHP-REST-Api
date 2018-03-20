@@ -7,7 +7,7 @@ $requestMethod = "GET";
 
 $url = "http://rest.local/v1/Example/";
 
-$apiKey = 'xlocaltest';
+$apiKey = 'localtest';
 $secret = 'secret';
 $timestamp = 'timestamp'; // Create timestamp using: gmdate("U")
 
@@ -29,14 +29,17 @@ switch ($requestMethod) {
         break;
 
     case "POST":
+        $postData = [
+            "name" => "Greta Garbo",
+            "age" => "93",
+            "city" => "Los Angeles"
+        ];
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         break;
 
     default:
-        $data["version"] = "v1";
-        $data["view"] = "Example";
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $requestMethod);
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
@@ -44,7 +47,11 @@ switch ($requestMethod) {
 }
 
 curl_setopt($ch, CURLOPT_HEADER, true);
-$output = curl_exec($ch);
+
+if (! $output = curl_exec($ch)) {
+    trigger_error(curl_error($ch));
+}
+
 curl_close($ch);
 
 // echo $output;

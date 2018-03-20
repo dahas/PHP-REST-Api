@@ -15,7 +15,7 @@ class ExampleView implements ViewIF
     private $allowedRequestMethods = ["GET", "POST", "PUT", "DELETE"];
 
     // GET
-    private function read()
+    private function read($request=null)
     {
         echo json_encode(
             [
@@ -29,22 +29,37 @@ class ExampleView implements ViewIF
     }
 
     // POST
-    private function create()
+    private function create($request=null)
     {
-        // ToDO
+        echo json_encode([
+            "status" => "success",
+            "data" => [
+                "name" => $request->getParameter("name"),
+                "age"  => $request->getParameter("age"),
+                "city" => $request->getParameter("city"),
+            ]
+        ]);
         return true;
     }
 
     // PUT
-    private function update()
+    private function update($request=null)
     {
-        // ToDO
+        echo json_encode([
+            "status" => "success",
+            "data" => [
+                "name" => $request->getParameter("name"),
+                "age"  => $request->getParameter("age"),
+                "city" => $request->getParameter("city"),
+            ]
+        ]);
         return true;
     }
 
     // DELETE
-    private function delete()
+    private function delete($request=null)
     {
+        echo json_encode(["deleted" => "4 sure!"]);
         // ToDO
         return true;
     }
@@ -80,28 +95,28 @@ class ExampleView implements ViewIF
 
         switch ($request->getMethod()) {
             case "GET":
-                if ($this->read())
+                if ($this->read($this->request))
                     $this->response->setStatus(200); // OK
                 else
                     $this->response->setStatus(500); // Internal Server Error
                 break;
 
             case "POST":
-                if ($this->create())
+                if ($this->create($this->request))
                     $this->response->setStatus(201); // Created
                 else
                     $this->response->setStatus(500); // Internal Server Error
                 break;
 
             case "PUT":
-                if ($this->update())
+                if ($this->update($this->request))
                     $this->response->setStatus(200); // OK
                 else
                     $this->response->setStatus(500); // Internal Server Error
                 break;
 
             case "DELETE":
-                if ($this->delete())
+                if ($this->delete($this->request))
                     $this->response->setStatus(200); // OK
                 else
                     $this->response->setStatus(500); // Internal Server Error
@@ -147,9 +162,9 @@ class ExampleView implements ViewIF
     {
         $sigArr = [];
 
-        // Generate token for testing:
+        // Generate token for debugging:
         $whitelist = array('127.0.0.1', '::1');
-        if(in_array($_SERVER['REMOTE_ADDR'], $whitelist)) {
+        if((isset($GLOBALS["debug"]) && $GLOBALS["debug"]) || in_array($_SERVER['REMOTE_ADDR'], $whitelist)) {
             $sigArr[] = sha1($key . $secret . 'timestamp');
         }
 
