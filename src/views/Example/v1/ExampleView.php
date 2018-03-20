@@ -42,21 +42,24 @@ class ExampleView implements ViewIF
             $posts[] = $record;
         }
 
-        if ($affectedRows) {
+        if ($affectedRows == 1) {
             echo json_encode([
                 "status" => "success",
                 "data" => [
-                    "count" => $affectedRows,
+                    "post" => $posts[0]
+                ]
+            ]);
+        } else if ($affectedRows > 1) {
+            echo json_encode([
+                "status" => "success",
+                "data" => [
                     "posts" => $posts
                 ]
             ]);
         } else {
             echo json_encode([
                 "status" => "fail",
-                "message" => "Record doesn´t exist.",
-                "data" => [
-                    "count" => $affectedRows
-                ]
+                "message" => "No record found."
             ]);
         }
 
@@ -149,9 +152,7 @@ class ExampleView implements ViewIF
         } else {
             echo json_encode([
                 "status" => "fail",
-                "message" => "Either no changes detected or the target record doesn´t exist.",
-                "affected_rows" => $affectedRows,
-                "update_id" => $request->getParameter("uid")
+                "message" => "Either no changes detected or the target record doesn´t exist."
             ]);
         }
 
@@ -182,9 +183,7 @@ class ExampleView implements ViewIF
         } else {
             echo json_encode([
                 "status" => "fail",
-                "message" => "Record doesn´t exist.",
-                "affected_rows" => $affectedRows,
-                "delete_id" => $request->getParameter("uid")
+                "message" => "Record not found."
             ]);
         }
 
