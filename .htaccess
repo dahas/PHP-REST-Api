@@ -4,7 +4,7 @@ RewriteEngine On
 RewriteRule ^([^/]*)/([^/]*)$ /api.php?version=$1&view=$2 [L,QSA]
 
 # REWRITE: www.domain.tld/api_version/view/uid/
-RewriteRule ^([^/]*)/([^/]*)/([^/]*)$ /api.php?version=$1&view=$2&entry_id=$3 [L,QSA]
+RewriteRule ^([^/]*)/([^/]*)/([^/]*)$ /api.php?version=$1&view=$2&uid=$3 [L,QSA]
 
 # REWRITE: www.domain.tld/api_version/view/uid/module/
-RewriteRule ^([^/]*)/([^/]*)/([^/]*)/([^/]*)$ /api.php?version=$1&view=$2&entry_id=$3&module=$4 [L,QSA]
+RewriteRule ^([^/]*)/([^/]*)/([^/]*)/([^/]*)$ /api.php?version=$1&view=$2&uid=$3&module=$4 [L,QSA]

@@ -5,6 +5,7 @@ namespace php_rest\src\views\Example\v1;
 use php_rest\src\interfaces\ViewIF;
 use php_rest\src\interfaces\ResponseIF;
 use php_rest\src\interfaces\RequestIF;
+use php_rest\src\lib\Database;
 
 
 class ExampleView implements ViewIF
@@ -15,52 +16,174 @@ class ExampleView implements ViewIF
     private $allowedRequestMethods = ["GET", "POST", "PUT", "DELETE"];
 
     // GET
-    private function read($request=null)
+    private function read($request=null, $response=null)
     {
-        echo json_encode(
-            [
-                "This" => "aaaaa",
-                "Is" => "bbbbb",
-                "Awesome" => "ccccc"
-            ]
-        );
-        // To be done
+        if (! $db = Database::getInstance()) {
+            return false;
+        }
+
+        $query = [];
+        $query["columns"] = "name, age, city, country";
+        $query["from"] = "sampledata";
+
+        if ($request->getParameter("uid"))
+            $query["where"] = "uid=".$request->getParameter("uid");
+
+        $recordset = $db->select($query);
+
+        if (! $recordset) {
+            return false;
+        }
+
+        $affectedRows = $recordset->getRecordCount();
+
+        $posts = [];
+        while ($record = $recordset->next()) {
+            $posts[] = $record;
+        }
+
+        if ($affectedRows) {
+            echo json_encode([
+                "status" => "success",
+                "data" => [
+                    "count" => $affectedRows,
+                    "posts" => $posts
+                ]
+            ]);
+        } else {
+            echo json_encode([
+                "status" => "record not found",
+                "data" => [
+                    "count" => $affectedRows
+                ]
+            ]);
+        }
+
+        
+
+        $response->addHeader("X-Data-Count", $affectedRows);
+
         return true;
     }
 
     // POST
-    private function create($request=null)
+    private function create($request=null, $response=null)
     {
+        if (! $db = Database::getInstance()) {
+            return false;
+        }
+
+        $data = [
+            $request->getParameter("name"),
+            $request->getParameter("age"),
+            $request->getParameter("city"),
+            $request->getParameter("country")
+        ];
+
+        // Quote values:
+        array_walk($data, function (&$item) {
+            $item = "$item";
+        });
+
+        $query = [];
+        $query["into"] = "sampledata";
+        $query["columns"] = "name, age, city, country";
+        $query["values"] = implode(", ", $data);
+
+        $uid = $db->insert($query);
+
+        if (! $uid) {
+            return false;
+        }
+
         echo json_encode([
             "status" => "success",
-            "data" => [
-                "name" => $request->getParameter("name"),
-                "age"  => $request->getParameter("age"),
-                "city" => $request->getParameter("city"),
-            ]
+            "insert_id" => $uid,
+            "data" => $data
         ]);
+
+        $response->addHeader("X-Insert-Count", 1);
+
         return true;
     }
 
     // PUT
-    private function update($request=null)
+    private function update($request=null, $response=null)
     {
-        echo json_encode([
-            "status" => "success",
-            "data" => [
-                "name" => $request->getParameter("name"),
-                "age"  => $request->getParameter("age"),
-                "city" => $request->getParameter("city"),
-            ]
-        ]);
+        if (! $db = Database::getInstance()) {
+            return false;
+        }
+
+        $data = [
+            "name" => $request->getParameter("name"),
+            "age" => $request->getParameter("age"),
+            "city" => $request->getParameter("city"),
+            "country" => $request->getParameter("country")
+        ];
+
+        // Prepare values:
+        array_walk($data, function (&$item, $key) {
+            $item = "$key='$item'";
+        });
+
+        $dataStr = implode(", ", $data);
+
+        $query = [];
+        $query["table"] = "sampledata";
+        $query["set"] = $dataStr;
+        $query["where"] = "uid=".$request->getParameter("uid");
+
+        $affectedRows = $db->update($query);
+
+        if ($affectedRows) {
+            echo json_encode([
+                "status" => "success",
+                "affected_rows" => $affectedRows,
+                "update_id" => $request->getParameter("uid"),
+                "data" => $data
+            ]);
+        } else {
+            echo json_encode([
+                "status" => "record not found",
+                "affected_rows" => $affectedRows,
+                "update_id" => $request->getParameter("uid")
+            ]);
+        }
+
+        $response->addHeader("X-Update-Count", $affectedRows);
+
         return true;
     }
 
     // DELETE
-    private function delete($request=null)
+    private function delete($request=null, $response=null)
     {
-        echo json_encode(["deleted" => "4 sure!"]);
-        // ToDO
+        if (! $db = Database::getInstance()) {
+            return false;
+        }
+
+        $query = [];
+        $query["from"] = "sampledata";
+        $query["where"] = "uid=".$request->getParameter("uid");
+
+        $affectedRows = $db->delete($query);
+
+        if ($affectedRows) {
+            echo json_encode([
+                "status" => "success",
+                "affected_rows" => $affectedRows,
+                "delete_id" => $request->getParameter("uid")
+            ]);
+        } else {
+            echo json_encode([
+                "status" => "record not found",
+                "affected_rows" => $affectedRows,
+                "delete_id" => $request->getParameter("uid")
+            ]);
+        }
+
+        $response->addHeader("X-Delete-Count", $affectedRows);
+
         return true;
     }
 
@@ -95,28 +218,28 @@ class ExampleView implements ViewIF
 
         switch ($request->getMethod()) {
             case "GET":
-                if ($this->read($this->request))
+                if ($this->read($this->request, $this->response))
                     $this->response->setStatus(200); // OK
                 else
                     $this->response->setStatus(500); // Internal Server Error
                 break;
 
             case "POST":
-                if ($this->create($this->request))
+                if ($this->create($this->request, $this->response))
                     $this->response->setStatus(201); // Created
                 else
                     $this->response->setStatus(500); // Internal Server Error
                 break;
 
             case "PUT":
-                if ($this->update($this->request))
+                if ($this->update($this->request, $this->response))
                     $this->response->setStatus(200); // OK
                 else
                     $this->response->setStatus(500); // Internal Server Error
                 break;
 
             case "DELETE":
-                if ($this->delete($this->request))
+                if ($this->delete($this->request, $this->response))
                     $this->response->setStatus(200); // OK
                 else
                     $this->response->setStatus(500); // Internal Server Error
@@ -153,10 +276,10 @@ class ExampleView implements ViewIF
     }
 
     /**
-     * @param $key      The api key
-     * @param $secret   The secret string
+     * @param string $key  The api key
+     * @param string $secret The secret string
      * @param int $secs Amount of seconds a token is valid (default 2, min 1 - max 30 seconds)
-     * @return array    Array of hashed tokens
+     * @return array Array of hashed tokens
      */
     private function createAccessTokens($key, $secret, $secs = 2)
     {
