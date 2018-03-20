@@ -52,7 +52,8 @@ class ExampleView implements ViewIF
             ]);
         } else {
             echo json_encode([
-                "status" => "record not found",
+                "status" => "fail",
+                "message" => "Record doesn´t exist.",
                 "data" => [
                     "count" => $affectedRows
                 ]
@@ -91,6 +92,13 @@ class ExampleView implements ViewIF
         $uid = $db->insert($query);
 
         if (! $uid) {
+            echo json_encode([
+                "status" => "error",
+                "message" => "Query could not be executed!",
+                "insert_id" => $uid,
+                "data" => $data
+            ]);
+
             return false;
         }
 
@@ -142,7 +150,8 @@ class ExampleView implements ViewIF
             ]);
         } else {
             echo json_encode([
-                "status" => "record not found",
+                "status" => "fail",
+                "message" => "Either no changes detected or the target record doesn´t exist.",
                 "affected_rows" => $affectedRows,
                 "update_id" => $request->getParameter("uid")
             ]);
@@ -174,7 +183,8 @@ class ExampleView implements ViewIF
             ]);
         } else {
             echo json_encode([
-                "status" => "record not found",
+                "status" => "fail",
+                "message" => "Record doesn´t exist.",
                 "affected_rows" => $affectedRows,
                 "delete_id" => $request->getParameter("uid")
             ]);

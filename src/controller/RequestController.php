@@ -27,7 +27,7 @@ class RequestController implements RequestIF
     public function getParameter($name)
     {
         if (isset($this->parameters[$name])) {
-            return $this->parameters[$name];
+            return $this->filterInput($this->parameters[$name]);
         }
         return null;
     }
@@ -50,4 +50,9 @@ class RequestController implements RequestIF
     {
         return $_SERVER['REQUEST_METHOD'];
     }
+
+    private function filterInput($input)
+	{
+		return filter_var(rawurldecode($input), FILTER_SANITIZE_STRING);
+	}
 }
