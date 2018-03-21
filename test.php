@@ -7,7 +7,7 @@
 
 // Which method do you want to test? 
 // GET, POST, PUT or DELETE
-$requestMethod = 'PUT';
+$requestMethod = 'GET';
 
 
 // These values are for testing only.

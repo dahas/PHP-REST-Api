@@ -2,28 +2,23 @@
 
 namespace php_rest;
 
-$GLOBALS["debug"] = false;
 
-// Simulate request in debug mode:
-if (isset($argv[1]) && $argv[1] == 'debug') 
-{
-    $GLOBALS["debug"] = true;
+$GLOBALS["debug"] = true;
 
-    // Simulate method:
-    $_SERVER['REQUEST_METHOD'] = 'GET';
+// Simulate method:
+$_SERVER['REQUEST_METHOD'] = 'GET';
 
-    $_REQUEST['version'] = 'v1';
-    $_REQUEST['view'] = 'Example';
-    // $_REQUEST['uid'] = '2';
-    $_REQUEST['api_key'] = 'localtest';
-    $_REQUEST['token'] = '0acd0596ce9a6ed7fbcdff663b3be726e566ba36'; // Generate like this: sha1($apiKey . $secret . (gmdate("U")))
+$_REQUEST['version'] = 'v1';
+$_REQUEST['view'] = 'Example';
+// $_REQUEST['uid'] = '2';
+$_REQUEST['api_key'] = 'localtest';
+$_REQUEST['token'] = '0acd0596ce9a6ed7fbcdff663b3be726e566ba36'; // Generate like this: sha1($apiKey . $secret . (gmdate("U")))
 
-    // Sample data:
-    $_REQUEST['name'] = "Greta Garboni";
-    $_REQUEST['age'] = 36;
-    $_REQUEST['city'] = "Capetown";
-    $_REQUEST['country'] = "Southafrica";
-}
+// Sample data:
+$_REQUEST['name'] = "Jason Whittaker";
+$_REQUEST['age'] = 36;
+$_REQUEST['city'] = "Capetown";
+$_REQUEST['country'] = "Southafrica";
 
 
 function autoloader($class)
