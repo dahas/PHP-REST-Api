@@ -10,6 +10,7 @@ class Database
 {
     private static $instance = null;
     private $conn = null;
+    private $dbExists = false;
     private $db = "";
     private $host = "";
     private $user = "";
@@ -22,13 +23,13 @@ class Database
     protected function __construct()
     {
         $this->db = "restapi";
-        $this->host = "localhost";
-        $this->user = "root";
-        $this->pass = "";
+        $this->host = "192.168.10.10";
+        $this->user = "homestead";
+        $this->pass = "secret";
         $this->charset = "utf8";
 
-        $this->conn = @mysqli_connect($this->host, $this->user, $this->pass) or die("Connection to database failed! Supply the mandatory values in app.ini first.");
-        @mysqli_select_db($this->conn, $this->db) or die("Database '$this->db' doesn´t exist!");
+        $this->conn = @mysqli_connect($this->host, $this->user, $this->pass); #or die("Connection to database failed! Supply the mandatory settings first.");
+        $this->dbExists = @mysqli_select_db($this->conn, $this->db); #or die("Database '$this->db' doesn´t exist!");
         mysqli_set_charset($this->conn, $this->charset);
     }
 
@@ -43,6 +44,35 @@ class Database
         }
 
         return self::$instance;
+    }
+
+    public function dbCheck()
+    {
+        if (! $this->conn || ! $this->dbExists) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public function dbInfo()
+    {
+        if (! $this->conn) {
+            $info = [
+                "status" => "error",
+                "message" => "Connection to database failed! Supply the mandatory settings first."
+            ];
+        } else if (! $this->dbExists) {
+            $info = [
+                "status" => "error",
+                "message" => "Database '$this->db' doesn´t exist."
+            ];
+        } else {
+            $info = [
+                "status" => "success"
+            ];
+        }
+        return $info;
     }
 
     /**

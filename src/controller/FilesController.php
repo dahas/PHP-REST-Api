@@ -30,7 +30,7 @@ class FilesController implements FilesIF
         $file = "{$this->fPath}/{$viewName}/{$viewVersion}/{$viewName}View.php";
 
         $fExists = file_exists($file);
-        $cExists = class_exists($class);
+        $cExists = $fExists ? class_exists($class) : false;
 
         if (!$fExists || !$cExists)
             return false;

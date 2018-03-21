@@ -2,16 +2,32 @@
 
 namespace php_rest\src\lib;
 
+use php_rest\src\interfaces\ViewIF;
 use php_rest\src\interfaces\ResponseIF;
 use php_rest\src\interfaces\RequestIF;
-use php_rest\src\interfaces\ViewIF;
 
-class ViewBase implements ViewIF
+/**
+ * Class ViewBase
+ * @package php_rest\src\lib
+ */
+abstract class ViewBase implements ViewIF
 {
     private $request;
     private $response;
 
-    private $allowedRequestMethods = ["GET", "POST", "PUT", "DELETE"];
+    protected $allowedRequestMethods = [];
+
+    // GET
+    public function read($request=null, $response=null) {}
+
+    // POST
+    public function create($request=null, $response=null) {}
+
+    // PUT
+    public function update($request=null, $response=null) {}
+
+    // DELETE
+    public function delete($request=null, $response=null) {}
 
     /**
      * @param RequestIF $request The Request Handler
@@ -42,40 +58,39 @@ class ViewBase implements ViewIF
         $this->response->addHeader("Allow", $this->getAllowedRequestMethodsString());
         $this->response->addHeader("Content-Type", "application/json");
 
-        switch ($request->getMethod()) {
+        switch ($request->getMethod()) 
+        {
             case "GET":
-                if ($this->read())
+                if ($this->read($this->request, $this->response))
                     $this->response->setStatus(200); // OK
                 else
                     $this->response->setStatus(500); // Internal Server Error
                 break;
 
             case "POST":
-                if ($this->create())
+                if ($this->create($this->request, $this->response))
                     $this->response->setStatus(201); // Created
                 else
                     $this->response->setStatus(500); // Internal Server Error
                 break;
 
             case "PUT":
-                if ($this->update())
+                if ($this->update($this->request, $this->response))
                     $this->response->setStatus(200); // OK
                 else
                     $this->response->setStatus(500); // Internal Server Error
                 break;
 
             case "DELETE":
-                if ($this->delete())
+                if ($this->delete($this->request, $this->response))
                     $this->response->setStatus(200); // OK
                 else
                     $this->response->setStatus(500); // Internal Server Error
-
                 break;
 
             default:
                 $this->response->setStatus(501); // Not Implemented
                 return null;
-                break;
         }
     }
 
@@ -86,7 +101,7 @@ class ViewBase implements ViewIF
      */
     private function validateAuthorization()
     {
-        // ToDo: Get users auth data from DB
+        // ToDo: Get users auth data from OAuth2
         $apiKey = 'localtest';
         $secret = 'secret';
 
@@ -102,18 +117,18 @@ class ViewBase implements ViewIF
     }
 
     /**
-     * @param $key      The api key
-     * @param $secret   The secret string
+     * @param string $key  The api key
+     * @param string $secret The secret string
      * @param int $secs Amount of seconds a token is valid (default 2, min 1 - max 30 seconds)
-     * @return array    Array of hashed tokens
+     * @return array Array of hashed tokens
      */
     private function createAccessTokens($key, $secret, $secs = 2)
     {
         $sigArr = [];
 
-        // Generate token for testing:
-        $whitelist = array('127.0.0.1', '::1');
-        if(in_array($_SERVER['REMOTE_ADDR'], $whitelist)) {
+        // Generate token for debugging:
+        $whitelist = array('192.168.10.1', '127.0.0.1', '::1');
+        if((isset($GLOBALS["debug"]) && $GLOBALS["debug"]) || in_array($_SERVER['REMOTE_ADDR'], $whitelist)) {
             $sigArr[] = sha1($key . $secret . 'timestamp');
         }
 
@@ -135,5 +150,4 @@ class ViewBase implements ViewIF
     {
         return implode(", ", $this->allowedRequestMethods);
     }
-
 }

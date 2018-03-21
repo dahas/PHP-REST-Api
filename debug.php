@@ -10,11 +10,11 @@ if (isset($argv[1]) && $argv[1] == 'debug')
     $GLOBALS["debug"] = true;
 
     // Simulate method:
-    $_SERVER['REQUEST_METHOD'] = 'PUT';
+    $_SERVER['REQUEST_METHOD'] = 'GET';
 
     $_REQUEST['version'] = 'v1';
     $_REQUEST['view'] = 'Example';
-    $_REQUEST['uid'] = '7';
+    // $_REQUEST['uid'] = '2';
     $_REQUEST['api_key'] = 'localtest';
     $_REQUEST['token'] = '0acd0596ce9a6ed7fbcdff663b3be726e566ba36'; // Generate like this: sha1($apiKey . $secret . (gmdate("U")))
 
