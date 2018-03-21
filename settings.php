@@ -1,6 +1,7 @@
 <?php
 
 $GLOBALS = [
+    
     "response_content_type" => "application/json",
 
     "db_type" => "mysql",
