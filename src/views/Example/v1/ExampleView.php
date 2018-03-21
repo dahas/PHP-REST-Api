@@ -154,12 +154,17 @@ class ExampleView extends ViewBase
 
         $affectedRows = $db->update($query);
 
-        if ($affectedRows) {
+        if ($affectedRows > 0) {
             echo json_encode([
                 "status" => "success",
                 "affected_rows" => $affectedRows,
                 "update_id" => $request->getParameter("uid"),
                 "data" => $data
+            ]);
+        } else if ($affectedRows < 0) {
+            echo json_encode([
+                "status" => "fail",
+                "message" => "Query could not be executed."
             ]);
         } else {
             echo json_encode([

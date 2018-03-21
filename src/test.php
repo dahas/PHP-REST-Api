@@ -48,12 +48,12 @@ switch ($requestMethod)
 
     case "PUT":
         $postData = [
-            "name" => "Gretchen Garbo",
-            "age" => "18",
-            "city" => "Hollywood",
-            "country" => "USA"
+            "name" => "Jenny Piloso",
+            "age" => "29",
+            "city" => "Flagstaff",
+            "country" => "Arizona"
         ];
-        $url .= "/v1/Example/6/";
+        $url .= "/v1/Example/5/";
         $url .= "?" . http_build_query($uri);
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
