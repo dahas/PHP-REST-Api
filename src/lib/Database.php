@@ -15,7 +15,7 @@ class Database
     private $host = "";
     private $user = "";
     private $pass = "";
-    private $charset = "utf8";
+    private $charset = "";
 
     /**
      * Protected constructor since we use a singleton.
