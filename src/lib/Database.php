@@ -28,8 +28,8 @@ class Database
         $this->pass = "secret";
         $this->charset = "utf8";
 
-        $this->conn = @mysqli_connect($this->host, $this->user, $this->pass); #or die("Connection to database failed! Supply the mandatory settings first.");
-        $this->dbExists = @mysqli_select_db($this->conn, $this->db); #or die("Database '$this->db' doesn´t exist!");
+        $this->conn = @mysqli_connect($this->host, $this->user, $this->pass);
+        $this->dbExists = @mysqli_select_db($this->conn, $this->db);
         mysqli_set_charset($this->conn, $this->charset);
     }
 
@@ -65,7 +65,7 @@ class Database
         } else if (! $this->dbExists) {
             $info = [
                 "status" => "error",
-                "message" => "Database '$this->db' doesn´t exist."
+                "message" => "Database '$this->db' does not exist."
             ];
         } else {
             $info = [
