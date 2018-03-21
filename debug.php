@@ -3,8 +3,6 @@
 namespace php_rest;
 
 
-$GLOBALS["debug"] = true;
-
 // Simulate method:
 $_SERVER['REQUEST_METHOD'] = 'GET';
 
@@ -35,6 +33,8 @@ use php_rest\src\controller\FilesController;
 use php_rest\src\controller\RequestController;
 use php_rest\src\controller\ResponseController;
 use php_rest\src\controller\OutputController;
+
+include("settings.php");
 
 $filesHandler = new FilesController();
 $controller = new OutputController($filesHandler);

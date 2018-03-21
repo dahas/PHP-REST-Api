@@ -18,15 +18,16 @@ class Database
     private $charset = "utf8";
 
     /**
-     * Protected constructor, because we use a singleton.
+     * Protected constructor since we use a singleton.
      */
     protected function __construct()
     {
-        $this->db = "restapi";
-        $this->host = "192.168.10.10";
-        $this->user = "homestead";
-        $this->pass = "secret";
-        $this->charset = "utf8";
+        $dbConf = $GLOBALS["database"][$GLOBALS["db_type"]];
+        $this->db = $dbConf["db_name"];
+        $this->host = $dbConf["host"];
+        $this->user = $dbConf["username"];
+        $this->pass = $dbConf["password"];
+        $this->charset = $dbConf["charset"];
 
         $this->conn = @mysqli_connect($this->host, $this->user, $this->pass);
         $this->dbExists = @mysqli_select_db($this->conn, $this->db);
@@ -46,6 +47,9 @@ class Database
         return self::$instance;
     }
 
+    /**
+     * Check if database is available
+     */
     public function dbCheck()
     {
         if (! $this->conn || ! $this->dbExists) {
@@ -55,6 +59,9 @@ class Database
         }
     }
 
+    /**
+     * Return info about a connection error
+     */
     public function dbInfo()
     {
         if (! $this->conn) {

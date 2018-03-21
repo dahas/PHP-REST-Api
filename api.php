@@ -17,6 +17,8 @@ use php_rest\src\controller\RequestController;
 use php_rest\src\controller\ResponseController;
 use php_rest\src\controller\OutputController;
 
+include("settings.php");
+
 $filesHandler = new FilesController();
 $controller = new OutputController($filesHandler);
 

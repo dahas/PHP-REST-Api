@@ -56,7 +56,7 @@ abstract class ViewBase implements ViewIF
         }
 
         $this->response->addHeader("Allow", $this->getAllowedRequestMethodsString());
-        $this->response->addHeader("Content-Type", "application/json");
+        $this->response->addHeader("Content-Type", $GLOBALS["response_content_type"]);
 
         switch ($request->getMethod()) 
         {
@@ -127,8 +127,8 @@ abstract class ViewBase implements ViewIF
         $sigArr = [];
 
         // Generate token for debugging:
-        $whitelist = array('192.168.10.1', '127.0.0.1', '::1');
-        if((isset($GLOBALS["debug"]) && $GLOBALS["debug"]) || in_array($_SERVER['REMOTE_ADDR'], $whitelist)) {
+        $whitelist = $GLOBALS["debug"]["ip_whitelist"];
+        if((isset($GLOBALS["debug"]["enabled"]) && $GLOBALS["debug"]["enabled"]) || (isset($_SERVER['REMOTE_ADDR']) && in_array($_SERVER['REMOTE_ADDR'], $whitelist))) {
             $sigArr[] = sha1($key . $secret . 'timestamp');
         }
 
