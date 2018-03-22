@@ -39,12 +39,6 @@ abstract class ViewBase implements ViewIF
         $this->request = $request;
         $this->response = $response;
 
-        // Validate required request parameters
-        if (!$this->request->issetParameter("api_key") || !$this->request->issetParameter("token")) {
-            $this->response->setStatus(400); // Bad Request
-            return null;
-        }
-
         if (!$this->validateAuthorization()) {
             $this->response->setStatus(401); // Unauthorized
             return null;
@@ -101,46 +95,26 @@ abstract class ViewBase implements ViewIF
      */
     private function validateAuthorization()
     {
-        // ToDo: Get users auth data from OAuth2
-        $apiKey = 'localtest';
-        $secret = 'secret';
+        // ToDo: Get users auth data from DB
+        $username = 'localtest';
+        $password = sha1('secret');
 
-        // ToDo: Token must be send as a request parameter
-        $token = ($this->request->getParameter("token"));
+        $userData = "$username:$password";
 
-        $accTokens = $this->createAccessTokens($apiKey, $secret);
-
-        if ($this->request->getParameter("api_key") != $apiKey || !in_array($token, $accTokens))
+        if ($userData !== $this->getAuth())
             return false;
 
         return true;
     }
 
     /**
-     * @param string $key  The api key
-     * @param string $secret The secret string
-     * @param int $secs Amount of seconds a token is valid (default 2, min 1 - max 30 seconds)
-     * @return array Array of hashed tokens
+     * Getting the authorization http header of the basic authentication:
      */
-    private function createAccessTokens($key, $secret, $secs = 2)
+    private function getAuth()
     {
-        $sigArr = [];
-
-        // Generate token for debugging:
-        $whitelist = $GLOBALS["debug"]["ip_whitelist"];
-        if((isset($GLOBALS["debug"]["enabled"]) && $GLOBALS["debug"]["enabled"]) || (isset($_SERVER['REMOTE_ADDR']) && in_array($_SERVER['REMOTE_ADDR'], $whitelist))) {
-            $sigArr[] = sha1($key . $secret . 'timestamp');
-        }
-
-        if ($secs < 1) $secs = 1;
-        else if ($secs > 30) $secs = 30;
-
-        $timestamp = gmdate("U");
-        for ($ts = $timestamp; $ts > $timestamp - $secs; $ts--) {
-            $sigArr[] = sha1($key . $secret . $ts);
-        }
-
-        return $sigArr;
+        $username = $_SERVER["PHP_AUTH_USER"];
+        $password = sha1($_SERVER["PHP_AUTH_PW"]);
+        return "$username:$password";
     }
 
     /**

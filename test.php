@@ -10,14 +10,9 @@
 $requestMethod = 'GET';
 
 
-// These values are for testing only.
-// Usually a token is generated like this:
-// sha1($apiKey . $secret . gmdate("U"));
-$apiKey = 'localtest';
-$secret = 'secret';
-$timestamp = 'timestamp';
-$token = '0acd0596ce9a6ed7fbcdff663b3be726e566ba36';
-$uri = array("api_key" => $apiKey, "token" => $token);
+// Authetication:
+$username = "localtest";
+$password = "secret";
 
 
 // Base URL:
@@ -28,7 +23,6 @@ switch ($requestMethod)
     case "GET":
         $url .= "/v1/Example/"; // List of example items
         // $url .= "/v1/Example/3/"; // Single example item
-        $url .= "?" . http_build_query($uri);
         $ch = curl_init($url);
         break;
 
@@ -40,7 +34,6 @@ switch ($requestMethod)
             "country" => "California"
         ];
         $url .= "/v1/Example/";
-        $url .= "?" . http_build_query($uri);
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postData));
@@ -54,7 +47,6 @@ switch ($requestMethod)
             "country" => "Arizona"
         ];
         $url .= "/v1/Example/5/";
-        $url .= "?" . http_build_query($uri);
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postData));
@@ -62,12 +54,13 @@ switch ($requestMethod)
 
     case "DELETE":
         $url .= "/v1/Example/7/";
-        $url .= "?" . http_build_query($uri);
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
         break;
 }
 
+curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+curl_setopt($ch, CURLOPT_USERPWD, "$username:$password");
 curl_setopt($ch, CURLOPT_HEADER, true);
 
 if (! $output = curl_exec($ch)) {
