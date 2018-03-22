@@ -9,12 +9,31 @@ use php_rest\src\lib\Database;
 class ExampleView extends ViewBase
 {
     protected $allowedRequestMethods = ["GET", "POST", "PUT", "DELETE"];
+
+    protected $requiresAuthentication = true;
+
+    /**
+     * This function is called when $requiresAuthentication is true.
+     * Get username and password from a database.
+     * Make sure the password is stored SHA1 encrypted.
+     */
+    public function authenticate()
+    {
+        $db = Database::getInstance();
+
+        // ToDo: Get from DB
+        $username = 'localtest';
+        $password = sha1('secret');
+
+        $this->setUsername($username);
+        $this->setPassword($password);
+    }
     
     // GET
     public function read($request=null, $response=null)
     {
         $db = Database::getInstance();
-        if (! $db || ! $db->dbCheck()) {
+        if (! $db->dbCheck()) {
             echo json_encode($db->dbInfo());
             return false;
         }
@@ -73,7 +92,7 @@ class ExampleView extends ViewBase
     public function create($request=null, $response=null)
     {
         $db = Database::getInstance();
-        if (! $db || ! $db->dbCheck()) {
+        if (! $db->dbCheck()) {
             echo json_encode($db->dbInfo());
             return false;
         }
@@ -120,7 +139,7 @@ class ExampleView extends ViewBase
     public function update($request=null, $response=null)
     {
         $db = Database::getInstance();
-        if (! $db || ! $db->dbCheck()) {
+        if (! $db->dbCheck()) {
             echo json_encode($db->dbInfo());
             return false;
         }
@@ -182,7 +201,7 @@ class ExampleView extends ViewBase
     public function delete($request=null, $response=null)
     {
         $db = Database::getInstance();
-        if (! $db || ! $db->dbCheck()) {
+        if (! $db->dbCheck()) {
             echo json_encode($db->dbInfo());
             return false;
         }

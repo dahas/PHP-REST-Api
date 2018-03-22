@@ -6,6 +6,10 @@ namespace php_rest;
 // Simulate method:
 $_SERVER['REQUEST_METHOD'] = 'GET';
 
+// Simulate Login:
+$_SERVER['PHP_AUTH_USER'] = 'localtest';
+$_SERVER['PHP_AUTH_PW'] = 'secret';
+
 $_REQUEST['version'] = 'v1';
 $_REQUEST['view'] = 'Example';
 // $_REQUEST['uid'] = '2';

@@ -15,18 +15,20 @@ abstract class ViewBase implements ViewIF
     private $request;
     private $response;
 
-    protected $allowedRequestMethods = [];
+    private $username;
+    private $password;
 
-    // GET
+    protected $allowedRequestMethods = [];
+    protected $requiresAuthentication = true;
+
+    public function authenticate() {}
+
     public function read($request=null, $response=null) {}
 
-    // POST
     public function create($request=null, $response=null) {}
 
-    // PUT
     public function update($request=null, $response=null) {}
 
-    // DELETE
     public function delete($request=null, $response=null) {}
 
     /**
@@ -88,18 +90,27 @@ abstract class ViewBase implements ViewIF
         }
     }
 
-    // Helper Functions
+    public function setUsername($username)
+    {
+        $this->username = $username;
+    }
+
+    public function setPassword($password)
+    {
+        $this->password = $password;
+    }
 
     /**
      * @return bool
      */
     private function validateAuthorization()
     {
-        // ToDo: Get users auth data from DB
-        $username = 'localtest';
-        $password = sha1('secret');
+        if (! $this->requiresAuthentication)
+            return true;
 
-        $userData = "$username:$password";
+        $this->authenticate();
+
+        $userData = "{$this->username}:{$this->password}";
 
         if ($userData !== $this->getAuth())
             return false;
