@@ -38,6 +38,8 @@ abstract class ViewBase implements ViewIF
      */
     public function execute(RequestIF $request, ResponseIF $response)
     {
+        include("settings.php");
+        
         $this->request = $request;
         $this->response = $response;
 
@@ -52,7 +54,7 @@ abstract class ViewBase implements ViewIF
         }
 
         $this->response->addHeader("Allow", $this->getAllowedRequestMethodsString());
-        $this->response->addHeader("Content-Type", $GLOBALS["response_content_type"]);
+        $this->response->addHeader("Content-Type", SETTINGS["response_content_type"]);
 
         switch ($request->getMethod()) 
         {

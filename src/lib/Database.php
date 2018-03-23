@@ -22,7 +22,8 @@ class Database
      */
     protected function __construct()
     {
-        $dbConf = $GLOBALS["database"][$GLOBALS["db_type"]];
+        include("settings.php");
+        $dbConf = SETTINGS["database"][SETTINGS["db_type"]];
         $this->db = $dbConf["db_name"];
         $this->host = $dbConf["host"];
         $this->user = $dbConf["username"];
