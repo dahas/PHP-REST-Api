@@ -1,9 +1,4 @@
 <?php
-/*
-+-------------------------------------------------+
-|             TEST REST API WITH CURL             |
-+-------------------------------------------------+
-*/
 
 // Which method do you want to test? 
 // GET, POST, PUT or DELETE
@@ -21,8 +16,8 @@ $url = 'http://rest.test';
 switch ($requestMethod) 
 {
     case "GET":
-        $url .= "/v1/Example/"; // List of example items
-        // $url .= "/v1/Example/3/"; // Single example item
+        $url .= "/v1/Example/"; // List of items
+        // $url .= "/v1/Example/3/"; // Single item with ID 3
         $ch = curl_init($url);
         break;
 
