@@ -123,8 +123,8 @@ abstract class ViewBase implements ViewIF
      */
     private function getAuth()
     {
-        $username = $_SERVER["PHP_AUTH_USER"];
-        $password = sha1($_SERVER["PHP_AUTH_PW"]);
+        $username = $_SERVER["PHP_AUTH_USER"] ?? "";
+        $password = isset($_SERVER["PHP_AUTH_PW"]) ? sha1($_SERVER["PHP_AUTH_PW"]) : "";
         return "$username:$password";
     }
 

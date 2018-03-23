@@ -8,9 +8,12 @@ use php_rest\src\lib\Database;
 
 class ExampleView extends ViewBase
 {
+    // From ViewBase:
     protected $allowedRequestMethods = ["GET", "POST", "PUT", "DELETE"];
-
     protected $requiresAuthentication = true;
+
+    // Custom:
+    private $fields = ["name", "age", "city", "country"];
 
     /**
      * This function is called when $requiresAuthentication is true.
@@ -152,12 +155,13 @@ class ExampleView extends ViewBase
             return false;
         }
 
-        $data = [
-            "name" => $request->getParameter("name"),
-            "age" => $request->getParameter("age"),
-            "city" => $request->getParameter("city"),
-            "country" => $request->getParameter("country")
-        ];
+        $data = [];
+
+        foreach ($this->fields as $field) {
+            if ($request->getParameter($field)) {
+                $data[$field] = $request->getParameter($field);
+            }
+        }
 
         // Prepare values:
         array_walk($data, function (&$item, $key) {
