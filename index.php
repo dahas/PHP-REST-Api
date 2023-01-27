@@ -7,25 +7,15 @@ require __DIR__ . '/vendor/autoload.php';
 
 include("settings.php");
 
-/************** METHOD: ***************/
-$_SERVER['REQUEST_METHOD'] = 'GET'; // 'GET', 'POST', 'PUT', 'DELETE'
-
-/*********** AUTHENTICATE: ************/
-$_SERVER['PHP_AUTH_USER'] = 'localtest';
-$_SERVER['PHP_AUTH_PW'] = 'secret';
-
-$_SERVER['REQUEST_URI'] = "/v1/Users";
-
-/************ POST DATA: *************/
-$_POST['name'] = "Roger Whittaker";
-$_POST['age'] = 88;
-$_POST['city'] = "Rio Bravo";
-$_POST['country'] = "USA";
-
 $router = new Router();
 
 $router->auth(function () {
-    return true; // Return false, if not logged in.
+    /**
+     * Implement authentication logic here. Return 
+     * either true, if authentication is verified, 
+     * or false, if not.
+     */
+    return true; 
 });
 
 $router->get("/v1/Users", function ($params) {

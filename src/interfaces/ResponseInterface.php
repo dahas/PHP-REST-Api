@@ -1,10 +1,10 @@
 <?php
 
-namespace php_rest\src\interfaces;
+namespace RESTapi\Sources\interfaces;
 
-interface ResponseIF
+interface ResponseInterface
 {
-    public function send($data);
+    public function write($data);
 
     public function addHeader($name, $value);
 
@@ -12,5 +12,3 @@ interface ResponseIF
 
     public function flush();
 }
-
-?>

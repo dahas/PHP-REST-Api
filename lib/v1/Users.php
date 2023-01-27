@@ -1,43 +1,30 @@
 <?php
 
-namespace php_rest\src\views\Example\v1;
+namespace RESTapi\Library\v1;
 
-use php_rest\src\lib\ViewBase;
-use php_rest\src\lib\Database;
+use RESTapi\Sources\WebService;
+use RESTapi\Sources\Database;
+use RESTapi\Sources\Response;
 
 
-class ExampleView extends ViewBase
-{
-    // From ViewBase:
-    protected $allowedRequestMethods = ["GET", "POST", "PUT", "DELETE"];
-    protected $requiresAuthentication = true;
+class Users extends WebService {
 
-    // Custom:
-    private $fields = ["name", "age", "city", "country"];
+    private Response $response;
+    private array $fields;
 
-    /**
-     * This function is called when $requiresAuthentication is true.
-     * Get username and password from a database.
-     * Make sure the password is stored SHA1 encrypted.
-     */
-    public function authenticate()
+
+    public function __construct()
     {
-        $db = Database::getInstance();
-
-        // ToDo: Get from DB
-        $username = 'localtest';
-        $password = sha1('secret');
-
-        $this->setUsername($username);
-        $this->setPassword($password);
+        $this->response = new Response();
+        $this->fields = ["name", "age", "city", "country"];
     }
-    
+
     // GET
-    public function read($request=null, $response=null)
+    public function read(array $params = [])
     {
         $db = Database::getInstance();
-        if (! $db->dbCheck()) {
-            echo json_encode($db->dbInfo());
+        if (!$db->dbCheck()) {
+            $json = json_encode($db->dbInfo());
             return false;
         }
 
@@ -45,66 +32,72 @@ class ExampleView extends ViewBase
         $query["columns"] = "uid, name, age, city, country";
         $query["from"] = "sampledata";
 
-        if ($request->getParameter("uid"))
-            $query["where"] = "uid=".$request->getParameter("uid");
+        if (isset($params["uid"]) && $params["uid"])
+            $query["where"] = "uid=" . $params["uid"];
 
         $recordset = $db->select($query);
 
-        if (! $recordset) {
-            echo json_encode([
+        if (!$recordset) {
+            $json = json_encode([
                 "status" => "error",
                 "message" => "Query could not be executed."
             ]);
+            $this->response->write($json);
             return false;
         }
 
         $affectedRows = $recordset->getRecordCount();
 
-        $posts = [];
+        $users = [];
         while ($record = $recordset->next()) {
-            $posts[] = $record;
+            $users[] = $record;
         }
 
         if ($affectedRows == 1) {
-            echo json_encode([
+            $json = json_encode([
                 "status" => "success",
                 "data" => [
-                    "post" => $posts[0]
+                    "user" => $users[0]
                 ]
             ]);
+            $this->response->write($json);
         } else if ($affectedRows > 1) {
-            echo json_encode([
+            $json = json_encode([
                 "status" => "success",
                 "data" => [
-                    "posts" => $posts
+                    "users" => $users
                 ]
             ]);
+            $this->response->write($json);
         } else {
-            echo json_encode([
+            $json = json_encode([
                 "status" => "fail",
                 "message" => "No record found."
             ]);
+            $this->response->write($json);
         }
 
-        $response->addHeader("X-Data-Count", $affectedRows);
+        $this->response->addHeader("X-Data-Count", $affectedRows);
+        $this->response->flush();
 
         return true;
     }
 
     // POST
-    public function create($request=null, $response=null)
+    public function create($params)
     {
         $db = Database::getInstance();
-        if (! $db->dbCheck()) {
-            echo json_encode($db->dbInfo());
+        if (!$db->dbCheck()) {
+            $json = json_encode($db->dbInfo());
+            $this->response->write($json);
             return false;
         }
 
         $data = [
-            $request->getParameter("name"),
-            $request->getParameter("age"),
-            $request->getParameter("city"),
-            $request->getParameter("country")
+            $params["name"],
+            $params["age"],
+            $params["city"],
+            $params["country"]
         ];
 
         // Quote values:
@@ -119,47 +112,53 @@ class ExampleView extends ViewBase
 
         $uid = $db->insert($query);
 
-        if (! $uid) {
-            echo json_encode([
+        if (!$uid) {
+            $json = json_encode([
                 "status" => "error",
                 "message" => "Query could not be executed."
             ]);
+            $this->response->write($json);
             return false;
         }
 
-        echo json_encode([
+        $json = json_encode([
             "status" => "success",
             "insert_id" => $uid,
             "data" => $data
         ]);
+        $this->response->write($json);
 
-        $response->addHeader("X-Insert-Count", 1);
+        $this->response->addHeader("X-Insert-Count", 1);
+        $this->response->flush();
 
         return true;
     }
 
     // PUT
-    public function update($request=null, $response=null)
+    public function update(array $params)
     {
         $db = Database::getInstance();
-        if (! $db->dbCheck()) {
-            echo json_encode($db->dbInfo());
+        if (!$db->dbCheck()) {
+            $json = json_encode($db->dbInfo());
+            $this->response->write($json);
             return false;
         }
 
-        if (! $request->getParameter("uid")) {
-            echo json_encode([
+        if (!isset($params["uid"]) || !$params["uid"]) {
+            $json = json_encode([
                 "status" => "error",
                 "message" => "Please provide a unique ID."
             ]);
+            $this->response->write($json);
+            $this->response->flush();
             return false;
         }
 
         $data = [];
 
         foreach ($this->fields as $field) {
-            if ($request->getParameter($field)) {
-                $data[$field] = $request->getParameter($field);
+            if ($params[$field]) {
+                $data[$field] = $params[$field];
             }
         }
 
@@ -173,71 +172,81 @@ class ExampleView extends ViewBase
         $query = [];
         $query["table"] = "sampledata";
         $query["set"] = $dataStr;
-        $query["where"] = "uid=".$request->getParameter("uid");
+        $query["where"] = "uid=" . $params["uid"];
 
         $affectedRows = $db->update($query);
 
         if ($affectedRows > 0) {
-            echo json_encode([
+            $json = json_encode([
                 "status" => "success",
                 "affected_rows" => $affectedRows,
-                "update_id" => $request->getParameter("uid"),
+                "update_id" => $params["uid"],
                 "data" => $data
             ]);
+            $this->response->write($json);
         } else if ($affectedRows < 0) {
-            echo json_encode([
+            $json = json_encode([
                 "status" => "fail",
                 "message" => "Query could not be executed."
             ]);
+            $this->response->write($json);
         } else {
-            echo json_encode([
+            $json = json_encode([
                 "status" => "fail",
                 "message" => "Either no changes detected or the target record does not exist."
             ]);
+            $this->response->write($json);
         }
 
-        $response->addHeader("X-Update-Count", $affectedRows);
+        $this->response->addHeader("X-Update-Count", $affectedRows);
+        $this->response->flush();
 
         return true;
     }
 
     // DELETE
-    public function delete($request=null, $response=null)
+    public function delete(array $params)
     {
         $db = Database::getInstance();
-        if (! $db->dbCheck()) {
-            echo json_encode($db->dbInfo());
+        if (!$db->dbCheck()) {
+            $json = json_encode($db->dbInfo());
+            $this->response->write($json);
             return false;
         }
 
-        if (! $request->getParameter("uid")) {
-            echo json_encode([
+        if (!isset($params["uid"]) || !$params["uid"]) {
+            $json = json_encode([
                 "status" => "error",
                 "message" => "Please provide a unique ID."
             ]);
+            $this->response->write($json);
+            $this->response->flush();
             return false;
         }
 
         $query = [];
         $query["from"] = "sampledata";
-        $query["where"] = "uid=".$request->getParameter("uid");
+        $query["where"] = "uid=" . $params["uid"];
 
         $affectedRows = $db->delete($query);
 
         if ($affectedRows) {
-            echo json_encode([
+            $json = json_encode([
                 "status" => "success",
                 "affected_rows" => $affectedRows,
-                "delete_id" => $request->getParameter("uid")
+                "delete_id" => $params["uid"]
             ]);
+            $this->response->write($json);
         } else {
-            echo json_encode([
+            $json = json_encode([
                 "status" => "fail",
                 "message" => "Record not found."
             ]);
+            $this->response->write($json);
         }
 
-        $response->addHeader("X-Delete-Count", $affectedRows);
+        $this->response->addHeader("X-Delete-Count", $affectedRows);
+        $this->response->flush();
 
         return true;
     }

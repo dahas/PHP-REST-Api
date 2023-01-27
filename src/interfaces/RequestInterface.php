@@ -1,8 +1,8 @@
 <?php
 
-namespace php_rest\src\interfaces;
+namespace RESTapi\Sources\interfaces;
 
-interface RequestIF
+interface RequestInterface
 {
     public function issetParameter($name);
 
@@ -14,5 +14,3 @@ interface RequestIF
 
     public function getMethod();
 }
-
-?>

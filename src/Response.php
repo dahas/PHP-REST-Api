@@ -1,14 +1,14 @@
 <?php
 
-namespace php_rest\src\controller;
+namespace RESTapi\Sources;
 
-use php_rest\src\interfaces\ResponseIF;
+use RESTapi\Sources\interfaces\ResponseInterface;
 
-class ResponseController implements ResponseIF
+class Response implements ResponseInterface
 {
     private $status = 200;
     private $headers = array();
-    private $content = null;
+    private $body = null;
 
     public function setStatus($status)
     {
@@ -20,9 +20,9 @@ class ResponseController implements ResponseIF
         $this->headers[$name] = $value;
     }
 
-    public function send($data)
+    public function write($data)
     {
-        $this->content .= $data;
+        $this->body .= $data;
     }
 
     public function flush()
@@ -33,9 +33,9 @@ class ResponseController implements ResponseIF
             header("{$name}: {$value}");
         }
 
-        echo $this->content;
+        echo $this->body;
 
         $this->headers = array();
-        $this->content = null;
+        $this->body = null;
     }
 }

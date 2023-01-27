@@ -11,9 +11,9 @@ define('SETTINGS', [
         "mysql" => [
 
             "db_name" => "restapi",
-            "host" => "192.168.10.10",
-            "username" => "homestead",
-            "password" => "secret",
+            "host" => "localhost",
+            "username" => "root",
+            "password" => "password",
             "charset" => "utf8"
         ]
     ],

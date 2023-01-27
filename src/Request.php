@@ -1,12 +1,15 @@
 <?php
 
-namespace php_rest\src\controller;
+namespace RESTapi\Sources;
 
-use php_rest\src\interfaces\RequestIF;
+use RESTapi\Sources\interfaces\RequestInterface;
 
-class RequestController implements RequestIF
+class Request implements RequestInterface
 {
-    private $parameters;
+    private array $parameters;
+    private string $version = "";
+    private string $view = "";
+    private string $identifier = "";
 
     public function __construct()
     {
@@ -17,6 +20,44 @@ class RequestController implements RequestIF
         }
         
         $this->parameters = $rq;
+        $this->parseUri($_SERVER['REQUEST_URI']);
+    }
+
+    private function parseUri(string $uri): void
+    {
+        $arrUri = parse_url($uri);
+        $route = $arrUri['path'];
+        $segments = explode("/", substr($route, 1));
+
+        if (isset($segments[0])) {
+            $this->version = $segments[0];
+        }
+        if (isset($segments[1])) {
+            $this->view = $segments[1];
+        }
+        if (isset($segments[2])) {
+            $this->identifier = $segments[2];
+        }
+
+        $getVars = [];
+        if (isset($arrUri['query']) && $arrUri['query']) {
+            parse_str($arrUri['query'], $getVars);
+        }
+    }
+
+    public function version(): string
+    {
+        return $this->version;
+    }
+
+    public function view(): string
+    {
+        return $this->view;
+    }
+
+    public function identifier(): string
+    {
+        return $this->identifier;
     }
 
     public function issetParameter($name)

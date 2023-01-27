@@ -1,11 +1,8 @@
 <?php
 
-namespace php_rest\src\lib;
+namespace RESTapi\Sources;
 
-/**
- * Class Database
- * @package php_rest\src\lib
- */
+
 class Database
 {
     private static $instance = null;
@@ -17,12 +14,9 @@ class Database
     private $pass = "";
     private $charset = "";
 
-    /**
-     * Protected constructor since we use a singleton.
-     */
+
     protected function __construct()
     {
-        include("settings.php");
         $dbConf = SETTINGS["database"][SETTINGS["db_type"]];
         $this->db = $dbConf["db_name"];
         $this->host = $dbConf["host"];
@@ -35,10 +29,7 @@ class Database
         mysqli_set_charset($this->conn, $this->charset);
     }
 
-    /**
-     * Singleton
-     * @return null|DB
-     */
+
     public static function getInstance()
     {
         if (self::$instance == null) {
@@ -48,9 +39,7 @@ class Database
         return self::$instance;
     }
 
-    /**
-     * Check if database is available
-     */
+
     public function dbCheck()
     {
         if (! $this->conn || ! $this->dbExists) {
@@ -60,9 +49,7 @@ class Database
         }
     }
 
-    /**
-     * Return info about a connection error
-     */
+
     public function dbInfo()
     {
         if (! $this->conn) {
@@ -83,10 +70,7 @@ class Database
         return $info;
     }
 
-    /**
-     * @param array $conf
-     * @return Recordset
-     */
+
     public function select($conf)
     {
         $sql = "SELECT";
@@ -118,10 +102,7 @@ class Database
         return new Recordset($rs);
     }
 
-    /**
-     * @param array $conf
-     * @return int
-     */
+
     public function insert($conf)
     {
         $sql = "INSERT INTO";
@@ -150,10 +131,7 @@ class Database
         return 0;
     }
 
-    /**
-     * @param array $conf
-     * @return bool|mysqli_result
-     */
+
     public function update($conf)
     {
         $sql = "UPDATE";
@@ -174,10 +152,7 @@ class Database
         return mysqli_affected_rows($this->conn);
     }
 
-    /**
-     * @param array $conf
-     * @return bool|mysqli_result
-     */
+
     public function delete($conf)
     {
         $sql = "DELETE FROM";
@@ -194,9 +169,7 @@ class Database
         return mysqli_affected_rows($this->conn);
     }
 
-    /**
-     * Destructor
-     */
+
     public function __destruct()
     {
         if ($this->conn && mysqli_close($this->conn)) {
@@ -210,36 +183,25 @@ class Recordset
 {
     private $recordset = null;
 
-    /**
-     * Recordset constructor.
-     * @param $rs
-     */
+
     public function __construct($rs)
     {
         $this->recordset = $rs;
     }
 
-    /**
-     * @return int
-     */
+
     public function getRecordCount()
     {
         return $this->recordset ? mysqli_num_rows($this->recordset) : 0;
     }
 
-    /**
-     * @return bool
-     */
+
     public function reset()
     {
         return $this->recordset ? mysqli_data_seek($this->recordset, 0) : null;
     }
 
-    /**
-     * Iterate through collection
-     * 
-     * @return array|null|object
-     */
+
     public function next()
     {
         $record = $this->recordset ? mysqli_fetch_object($this->recordset) : null;
@@ -250,9 +212,7 @@ class Recordset
         }
     }
 
-    /**
-     * Destructor
-     */
+
     public function __destruct()
     {
         if ($this->recordset)
@@ -262,49 +222,30 @@ class Recordset
 }
 
 
-/**
- * Class Record
- * @package makeup\lib
- */
+
 class Record
 {
     private $record = null;
 
-    /**
-     * Record constructor.
-     * 
-     * @param object $record Single record
-     */
+
     public function __construct($record)
     {
         $this->record = $record;
     }
 
-    /**
-     * Access a property.
-     * 
-     * @param string $item
-     * @return mixed $value
-     */
+
     public function getProperty($item)
     {
         return $this->record->$item ?? null;
     }
 
-    /**
-     * Change the value of a property.
-     * 
-     * @param string $item
-     * @param mixed $value
-     */
+
     public function setProperty($item, $value)
     {
         $this->record->$item = $value;
     }
 
-    /**
-     * Destructor
-     */
+
     public function __destruct()
     {
         unset($this->record);
