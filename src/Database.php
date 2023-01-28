@@ -24,9 +24,22 @@ class Database
         $this->pass = $dbConf["password"];
         $this->charset = $dbConf["charset"];
 
-        $this->conn = @mysqli_connect($this->host, $this->user, $this->pass);
-        $this->dbExists = @mysqli_select_db($this->conn, $this->db);
-        mysqli_set_charset($this->conn, $this->charset);
+        mysqli_report(MYSQLI_REPORT_OFF);
+
+        try {
+            $this->conn = @mysqli_connect($this->host, $this->user, $this->pass);
+        } catch (\mysqli_sql_exception $e) {
+            echo $e;
+        }
+
+        try {
+            if ($this->conn) {
+                $this->dbExists = @mysqli_select_db($this->conn, $this->db);
+                mysqli_set_charset($this->conn, $this->charset);
+            }
+        } catch (\mysqli_sql_exception $e) {
+            echo $e;
+        }
     }
 
 

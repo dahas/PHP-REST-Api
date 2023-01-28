@@ -2,48 +2,54 @@
 
 namespace RESTapi\Library\v1;
 
+use RESTapi\Sources\Request;
+use RESTapi\Sources\Response;
 use RESTapi\Sources\WebService;
 use RESTapi\Sources\Database;
-use RESTapi\Sources\Response;
 
 
 class Users extends WebService {
 
-    private Response $response;
-    private array $fields;
+    private Database $db;
 
 
     public function __construct()
     {
-        $this->response = new Response();
-        $this->fields = ["name", "age", "city", "country"];
+        $this->db = Database::getInstance();
     }
 
-    // GET
-    public function read(array $params = [])
+    /**
+     * Retrieve a collection:
+     * GET api.domain.tld/[version]/[library]
+     * Retrieve a single item:
+     * GET api.domain.tld/[version]/[library]/[id]
+     * @param Request $request The Request Object
+     * @param Response $response The Response Object
+     */
+    public function get(Request $request, Response $response): void
     {
-        $db = Database::getInstance();
-        if (!$db->dbCheck()) {
-            $json = json_encode($db->dbInfo());
-            return false;
+        if (!$this->db->dbCheck()) {
+            $json = json_encode($this->db->dbInfo());
+            $response->write($json);
+            return;
         }
 
         $query = [];
         $query["columns"] = "uid, name, age, city, country";
         $query["from"] = "sampledata";
 
-        if (isset($params["uid"]) && $params["uid"])
-            $query["where"] = "uid=" . $params["uid"];
+        if ($request->getID())
+            $query["where"] = "uid=" . $request->getID();
 
-        $recordset = $db->select($query);
+        $recordset = $this->db->select($query);
 
         if (!$recordset) {
             $json = json_encode([
                 "status" => "error",
                 "message" => "Query could not be executed."
             ]);
-            $this->response->write($json);
-            return false;
+            $response->write($json);
+            return;
         }
 
         $affectedRows = $recordset->getRecordCount();
@@ -60,7 +66,7 @@ class Users extends WebService {
                     "user" => $users[0]
                 ]
             ]);
-            $this->response->write($json);
+            $response->write($json);
         } else if ($affectedRows > 1) {
             $json = json_encode([
                 "status" => "success",
@@ -68,36 +74,38 @@ class Users extends WebService {
                     "users" => $users
                 ]
             ]);
-            $this->response->write($json);
+            $response->write($json);
         } else {
             $json = json_encode([
                 "status" => "fail",
                 "message" => "No record found."
             ]);
-            $this->response->write($json);
+            $response->write($json);
         }
 
-        $this->response->addHeader("X-Data-Count", $affectedRows);
-        $this->response->flush();
-
-        return true;
+        $response->addHeader("X-Data-Count", $affectedRows);
     }
 
-    // POST
-    public function create($params)
+    /**
+     * Add a new item to the collection:
+     * POST api.domain.tld/[version]/[library]
+     * @param Request $request The Request Object
+     * @param Response $response The Response Object
+     */
+    public function post(Request $request, Response $response): void
     {
-        $db = Database::getInstance();
-        if (!$db->dbCheck()) {
-            $json = json_encode($db->dbInfo());
-            $this->response->write($json);
-            return false;
+        $this->db = Database::getInstance();
+        if (!$this->db->dbCheck()) {
+            $json = json_encode($this->db->dbInfo());
+            $response->write($json);
+            return;
         }
 
         $data = [
-            $params["name"],
-            $params["age"],
-            $params["city"],
-            $params["country"]
+            $request->getParameter("name"),
+            $request->getParameter("age"),
+            $request->getParameter("city"),
+            $request->getParameter("country")
         ];
 
         // Quote values:
@@ -110,15 +118,15 @@ class Users extends WebService {
         $query["columns"] = "name, age, city, country";
         $query["values"] = implode(", ", $data);
 
-        $uid = $db->insert($query);
+        $uid = $this->db->insert($query);
 
         if (!$uid) {
             $json = json_encode([
                 "status" => "error",
                 "message" => "Query could not be executed."
             ]);
-            $this->response->write($json);
-            return false;
+            $response->write($json);
+            return;
         }
 
         $json = json_encode([
@@ -126,39 +134,41 @@ class Users extends WebService {
             "insert_id" => $uid,
             "data" => $data
         ]);
-        $this->response->write($json);
+        $response->write($json);
 
-        $this->response->addHeader("X-Insert-Count", 1);
-        $this->response->flush();
-
-        return true;
+        $response->addHeader("X-Insert-Count", 1);
     }
 
-    // PUT
-    public function update(array $params)
+    /**
+     * Update an existing item:
+     * PUT api.domain.tld/[version]/[library]/[id]
+     * @param Request $request The Request Object
+     * @param Response $response The Response Object
+     */
+    public function put(Request $request, Response $response): void
     {
-        $db = Database::getInstance();
-        if (!$db->dbCheck()) {
-            $json = json_encode($db->dbInfo());
-            $this->response->write($json);
-            return false;
+        $this->db = Database::getInstance();
+        if (!$this->db->dbCheck()) {
+            $json = json_encode($this->db->dbInfo());
+            $response->write($json);
+            return;
         }
 
-        if (!isset($params["uid"]) || !$params["uid"]) {
+        if (!$request->getID()) {
             $json = json_encode([
                 "status" => "error",
                 "message" => "Please provide a unique ID."
             ]);
-            $this->response->write($json);
-            $this->response->flush();
-            return false;
+            $response->write($json);
+            return;
         }
 
         $data = [];
+        $fields = ["name", "age", "city", "country"];
 
-        foreach ($this->fields as $field) {
-            if ($params[$field]) {
-                $data[$field] = $params[$field];
+        foreach ($fields as $field) {
+            if ($request->getParameter($field)) {
+                $data[$field] = $request->getParameter($field);
             }
         }
 
@@ -172,82 +182,80 @@ class Users extends WebService {
         $query = [];
         $query["table"] = "sampledata";
         $query["set"] = $dataStr;
-        $query["where"] = "uid=" . $params["uid"];
+        $query["where"] = "uid=" . $request->getID();
 
-        $affectedRows = $db->update($query);
+        $affectedRows = $this->db->update($query);
 
         if ($affectedRows > 0) {
             $json = json_encode([
                 "status" => "success",
                 "affected_rows" => $affectedRows,
-                "update_id" => $params["uid"],
+                "update_id" => $request->getID(),
                 "data" => $data
             ]);
-            $this->response->write($json);
+            $response->write($json);
         } else if ($affectedRows < 0) {
             $json = json_encode([
                 "status" => "fail",
                 "message" => "Query could not be executed."
             ]);
-            $this->response->write($json);
+            $response->write($json);
         } else {
             $json = json_encode([
                 "status" => "fail",
                 "message" => "Either no changes detected or the target record does not exist."
             ]);
-            $this->response->write($json);
+            $response->write($json);
         }
 
-        $this->response->addHeader("X-Update-Count", $affectedRows);
-        $this->response->flush();
-
-        return true;
+        $response->addHeader("X-Update-Count", $affectedRows);
     }
 
-    // DELETE
-    public function delete(array $params)
+    /**
+     * Delete an existing item:
+     * DELETE api.domain.tld/[version]/[library]/[id]
+     * @param Request $request The Request Object
+     * @param Response $response The Response Object
+     */
+    public function delete(Request $request, Response $response): void
     {
-        $db = Database::getInstance();
-        if (!$db->dbCheck()) {
-            $json = json_encode($db->dbInfo());
-            $this->response->write($json);
-            return false;
+        $this->db = Database::getInstance();
+        if (!$this->db->dbCheck()) {
+            $json = json_encode($this->db->dbInfo());
+            $response->write($json);
+            return;
         }
 
-        if (!isset($params["uid"]) || !$params["uid"]) {
+        if (!$request->getID()) {
             $json = json_encode([
                 "status" => "error",
                 "message" => "Please provide a unique ID."
             ]);
-            $this->response->write($json);
-            $this->response->flush();
-            return false;
+            $response->write($json);
+            return;
         }
 
         $query = [];
         $query["from"] = "sampledata";
-        $query["where"] = "uid=" . $params["uid"];
+        $query["where"] = "uid=" . $request->getID();
 
-        $affectedRows = $db->delete($query);
+        $affectedRows = $this->db->delete($query);
 
         if ($affectedRows) {
             $json = json_encode([
                 "status" => "success",
                 "affected_rows" => $affectedRows,
-                "delete_id" => $params["uid"]
+                "delete_id" => $request->getID()
             ]);
-            $this->response->write($json);
+            $response->write($json);
         } else {
             $json = json_encode([
                 "status" => "fail",
                 "message" => "Record not found."
             ]);
-            $this->response->write($json);
+            $response->write($json);
         }
 
-        $this->response->addHeader("X-Delete-Count", $affectedRows);
-        $this->response->flush();
-
-        return true;
+        $response->addHeader("X-Delete-Count", $affectedRows);
     }
 }

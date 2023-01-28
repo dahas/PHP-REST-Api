@@ -1,7 +1,8 @@
 <?php
 
-use RESTapi\Sources\Router;
-use RESTapi\Library\v1\Users;
+use RESTapi\Sources\Api;
+use RESTapi\Sources\Request;
+use RESTapi\Sources\Response;
 
 require __DIR__ . '/vendor/autoload.php';
 
@@ -14,38 +15,13 @@ $_SERVER['REQUEST_METHOD'] = 'GET'; // 'GET', 'POST', 'PUT', 'DELETE'
 $_SERVER['PHP_AUTH_USER'] = 'localtest';
 $_SERVER['PHP_AUTH_PW'] = 'secret';
 
-$_SERVER['REQUEST_URI'] = "/v1/Users";
+$_SERVER['REQUEST_URI'] = "/v1/Users/2";
 
 /************ POST DATA: *************/
-$_POST['name'] = "Roger Whittaker";
-$_POST['age'] = 88;
+$_POST['name'] = "John Wayne";
+$_POST['age'] = 77;
 $_POST['city'] = "Rio Bravo";
-$_POST['country'] = "USA";
+$_POST['country'] = "Texas";
 
-$router = new Router();
-
-$router->auth(function () {
-    return true; // Return false, if not logged in.
-});
-
-$router->get("/v1/Users", function ($params) {
-    (new Users())->read($params);
-});
-
-$router->post("/v1/Users", function ($params) {
-    (new Users())->create($params);
-});
-
-$router->put("/v1/Users", function ($params) {
-    (new Users())->update($params);
-});
-
-$router->delete("/v1/Users", function ($params) {
-    (new Users())->delete($params);
-});
-
-$router->notFoundHandler(function () {
-    echo "404 Not Found";
-});
-
-$router->handle();
+$api = new Api();
+$api->handle(new Request(), new Response());

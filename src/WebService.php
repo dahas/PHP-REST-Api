@@ -2,16 +2,18 @@
 
 namespace RESTapi\Sources;
 
+use RESTapi\Sources\Request;
+use RESTapi\Sources\Response;
 use RESTapi\Sources\interfaces\WebServiceInterface;
 
 
 abstract class WebService implements WebServiceInterface
 {
-    public function read(array $params = []) {}
+    public function get(Request $request, Response $response) {}
 
-    public function create(array $params) {}
+    public function post(Request $request, Response $response) {}
 
-    public function update(array $params) {}
+    public function put(Request $request, Response $response) {}
 
-    public function delete(array $params) {}
+    public function delete(Request $request, Response $response) {}
 }
