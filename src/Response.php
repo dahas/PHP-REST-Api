@@ -4,28 +4,28 @@ namespace RESTapi\Sources;
 
 use RESTapi\Sources\interfaces\ResponseInterface;
 
-class Response implements ResponseInterface
-{
-    private $status = 200;
-    private $headers = array();
-    private $body = null;
+class Response implements ResponseInterface {
 
-    public function setStatus($status)
+    private int $status = 200;
+    private array $headers = [];
+    private string $body = "";
+
+    public function setStatus(int $status): void
     {
         $this->status = $status;
     }
 
-    public function addHeader($name, $value)
+    public function addHeader(string $name, mixed $value): void
     {
         $this->headers[$name] = $value;
     }
 
-    public function write($data)
+    public function write(string $content): void
     {
-        $this->body .= $data;
+        $this->body .= $content;
     }
 
-    public function flush()
+    public function flush(): void
     {
         header("HTTP/1.0 {$this->status}");
 
@@ -33,9 +33,9 @@ class Response implements ResponseInterface
             header("{$name}: {$value}");
         }
 
-        echo $this->body;
+        print $this->body;
 
-        $this->headers = array();
-        $this->body = null;
+        $this->headers = [];
+        $this->body = "";
     }
 }

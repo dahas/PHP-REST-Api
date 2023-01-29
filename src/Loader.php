@@ -9,16 +9,15 @@ class Loader implements LoaderInterface {
 
     public function loadWebService(string $version, string $name): WebService|null
     {
-        $file = dirname(__DIR__) . "/lib/$version/$name.php";
-        $class = "RESTapi\\Library\\$version\\$name";
+        $file = dirname(__DIR__) . "/services/$version/$name.php";
         if (!file_exists($file)) {
             return null;
         }
         require_once $file;
-        if (!class_exists($class)) {
+        if (!class_exists($name)) {
             return null;
         }
-        $service = new $class($this);
+        $service = new $name($this);
         if ($service instanceof WebService) {
             return $service;
         }

@@ -1,6 +1,6 @@
 <?php
 
-namespace RESTapi\Sources;
+namespace RESTapi\Library;
 
 
 class Database

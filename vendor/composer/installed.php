@@ -3,7 +3,7 @@
         'name' => 'dahas/php_rest',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '13a0a44aad55948d8eddd0c30bbe303f837aaa2a',
+        'reference' => '9271a4a10f24b5d449a1640c761a736a648717c0',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'dahas/php_rest' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '13a0a44aad55948d8eddd0c30bbe303f837aaa2a',
+            'reference' => '9271a4a10f24b5d449a1640c761a736a648717c0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

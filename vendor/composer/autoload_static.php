@@ -10,6 +10,7 @@ class ComposerStaticInit083119d8aeec08cd6fe9b6c20537691b
         'R' => 
         array (
             'RESTapi\\Sources\\' => 16,
+            'RESTapi\\Services\\' => 17,
             'RESTapi\\Library\\' => 16,
         ),
     );
@@ -18,6 +19,10 @@ class ComposerStaticInit083119d8aeec08cd6fe9b6c20537691b
         'RESTapi\\Sources\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src',
+        ),
+        'RESTapi\\Services\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/services',
         ),
         'RESTapi\\Library\\' => 
         array (

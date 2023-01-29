@@ -1,36 +1,26 @@
 <?php
 
-namespace RESTapi\Library\v1;
-
 use RESTapi\Sources\Request;
 use RESTapi\Sources\Response;
 use RESTapi\Sources\WebService;
-use RESTapi\Sources\Database;
+use RESTapi\Library\Database;
 
 
 class Users extends WebService {
 
     private Database $db;
 
-
     public function __construct()
     {
         $this->db = Database::getInstance();
     }
 
-    /**
-     * Retrieve a collection:
-     * GET api.domain.tld/[version]/[library]
-     * Retrieve a single item:
-     * GET api.domain.tld/[version]/[library]/[id]
-     * @param Request $request The Request Object
-     * @param Response $response The Response Object
-     */
     public function get(Request $request, Response $response): void
     {
         if (!$this->db->dbCheck()) {
             $json = json_encode($this->db->dbInfo());
             $response->write($json);
+            $response->setStatus(500);
             return;
         }
 
@@ -84,20 +74,15 @@ class Users extends WebService {
         }
 
         $response->addHeader("X-Data-Count", $affectedRows);
+        $response->setStatus(200);
     }
 
-    /**
-     * Add a new item to the collection:
-     * POST api.domain.tld/[version]/[library]
-     * @param Request $request The Request Object
-     * @param Response $response The Response Object
-     */
     public function post(Request $request, Response $response): void
     {
-        $this->db = Database::getInstance();
         if (!$this->db->dbCheck()) {
             $json = json_encode($this->db->dbInfo());
             $response->write($json);
+            $response->setStatus(500);
             return;
         }
 
@@ -137,20 +122,15 @@ class Users extends WebService {
         $response->write($json);
 
         $response->addHeader("X-Insert-Count", 1);
+        $response->setStatus(201);
     }
 
-    /**
-     * Update an existing item:
-     * PUT api.domain.tld/[version]/[library]/[id]
-     * @param Request $request The Request Object
-     * @param Response $response The Response Object
-     */
     public function put(Request $request, Response $response): void
     {
-        $this->db = Database::getInstance();
         if (!$this->db->dbCheck()) {
             $json = json_encode($this->db->dbInfo());
             $response->write($json);
+            $response->setStatus(500);
             return;
         }
 
@@ -209,20 +189,15 @@ class Users extends WebService {
         }
 
         $response->addHeader("X-Update-Count", $affectedRows);
+        $response->setStatus(201);
     }
 
-    /**
-     * Delete an existing item:
-     * DELETE api.domain.tld/[version]/[library]/[id]
-     * @param Request $request The Request Object
-     * @param Response $response The Response Object
-     */
     public function delete(Request $request, Response $response): void
     {
-        $this->db = Database::getInstance();
         if (!$this->db->dbCheck()) {
             $json = json_encode($this->db->dbInfo());
             $response->write($json);
+            $response->setStatus(500);
             return;
         }
 
@@ -257,5 +232,6 @@ class Users extends WebService {
         }
 
         $response->addHeader("X-Delete-Count", $affectedRows);
+        $response->setStatus(200);
     }
 }

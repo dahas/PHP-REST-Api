@@ -4,7 +4,7 @@ namespace RESTapi\Sources;
 
 use RESTapi\Sources\interfaces\RequestInterface;
 
-class Request implements RequestInterface
+final class Request implements RequestInterface
 {
     private string $method;
     private array $parameters;
@@ -20,16 +20,6 @@ class Request implements RequestInterface
         $this->parseUri($uri);
 
         $this->parseParameters();
-    }
-
-    private function parseParameters(): void
-    {
-        $rq = array_merge($_GET, $_POST);
-        if ($this->method == "PUT" || $this->method == "PATCH") {
-            parse_str(file_get_contents("php://input"), $_REQUEST);
-            $rq = array_merge($rq, $_REQUEST);
-        }
-        $this->parameters = $rq;
     }
 
     public function getVersion(): string
@@ -99,6 +89,16 @@ class Request implements RequestInterface
         if (isset($arrUri['query']) && $arrUri['query']) {
             parse_str($arrUri['query'], $getVars);
         }
+    }
+
+    private function parseParameters(): void
+    {
+        $rq = array_merge($_GET, $_POST);
+        if ($this->method == "PUT" || $this->method == "PATCH") {
+            parse_str(file_get_contents("php://input"), $_REQUEST);
+            $rq = array_merge($rq, $_REQUEST);
+        }
+        $this->parameters = $rq;
     }
 
     private function filterInput($input)

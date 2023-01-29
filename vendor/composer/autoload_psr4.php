@@ -7,5 +7,6 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'RESTapi\\Sources\\' => array($baseDir . '/src'),
+    'RESTapi\\Services\\' => array($baseDir . '/services'),
     'RESTapi\\Library\\' => array($baseDir . '/lib'),
 );

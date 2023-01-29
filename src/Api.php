@@ -2,7 +2,9 @@
 
 namespace RESTapi\Sources;
 
-class Api {
+use RESTapi\Sources\interfaces\ApiInterface;
+
+class Api implements ApiInterface {
 
     private Loader $loader;
 
