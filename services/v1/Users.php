@@ -20,7 +20,7 @@ class Users extends WebService {
         if (!$this->db->dbCheck()) {
             $json = json_encode($this->db->dbInfo());
             $response->write($json);
-            $response->setStatus(500);
+            $response->setStatusCode(500);
             return;
         }
 
@@ -39,6 +39,7 @@ class Users extends WebService {
                 "message" => "Query could not be executed."
             ]);
             $response->write($json);
+            $response->setStatusCode(500);
             return;
         }
 
@@ -49,6 +50,16 @@ class Users extends WebService {
             $users[] = $record;
         }
 
+        if ($affectedRows == 0) {
+            $json = json_encode([
+                "status" => "fail",
+                "message" => "No record found."
+            ]);
+            $response->write($json);
+            $response->setStatusCode(404);
+            return;
+        }
+
         if ($affectedRows == 1) {
             $json = json_encode([
                 "status" => "success",
@@ -56,25 +67,18 @@ class Users extends WebService {
                     "user" => $users[0]
                 ]
             ]);
-            $response->write($json);
-        } else if ($affectedRows > 1) {
+        } else {
             $json = json_encode([
                 "status" => "success",
                 "data" => [
                     "users" => $users
                 ]
             ]);
-            $response->write($json);
-        } else {
-            $json = json_encode([
-                "status" => "fail",
-                "message" => "No record found."
-            ]);
-            $response->write($json);
         }
 
+        $response->write($json);
         $response->addHeader("X-Data-Count", $affectedRows);
-        $response->setStatus(200);
+        $response->setStatusCode(200);
     }
 
     public function post(Request $request, Response $response): void
@@ -82,7 +86,7 @@ class Users extends WebService {
         if (!$this->db->dbCheck()) {
             $json = json_encode($this->db->dbInfo());
             $response->write($json);
-            $response->setStatus(500);
+            $response->setStatusCode(500);
             return;
         }
 
@@ -111,6 +115,7 @@ class Users extends WebService {
                 "message" => "Query could not be executed."
             ]);
             $response->write($json);
+            $response->setStatusCode(500);
             return;
         }
 
@@ -120,9 +125,8 @@ class Users extends WebService {
             "data" => $data
         ]);
         $response->write($json);
-
         $response->addHeader("X-Insert-Count", 1);
-        $response->setStatus(201);
+        $response->setStatusCode(201);
     }
 
     public function put(Request $request, Response $response): void
@@ -130,7 +134,7 @@ class Users extends WebService {
         if (!$this->db->dbCheck()) {
             $json = json_encode($this->db->dbInfo());
             $response->write($json);
-            $response->setStatus(500);
+            $response->setStatusCode(500);
             return;
         }
 
@@ -140,6 +144,7 @@ class Users extends WebService {
                 "message" => "Please provide a unique ID."
             ]);
             $response->write($json);
+            $response->setStatusCode(400);
             return;
         }
 
@@ -174,22 +179,26 @@ class Users extends WebService {
                 "data" => $data
             ]);
             $response->write($json);
-        } else if ($affectedRows < 0) {
+            $response->addHeader("X-Update-Count", $affectedRows);
+            $response->setStatusCode(201);
+            return;
+        }
+        
+        if ($affectedRows < 0) {
             $json = json_encode([
                 "status" => "fail",
                 "message" => "Query could not be executed."
             ]);
-            $response->write($json);
+            $response->setStatusCode(500);
         } else {
             $json = json_encode([
                 "status" => "fail",
                 "message" => "Either no changes detected or the target record does not exist."
             ]);
-            $response->write($json);
+            $response->setStatusCode(204);
         }
 
-        $response->addHeader("X-Update-Count", $affectedRows);
-        $response->setStatus(201);
+        $response->write($json);
     }
 
     public function delete(Request $request, Response $response): void
@@ -197,7 +206,7 @@ class Users extends WebService {
         if (!$this->db->dbCheck()) {
             $json = json_encode($this->db->dbInfo());
             $response->write($json);
-            $response->setStatus(500);
+            $response->setStatusCode(500);
             return;
         }
 
@@ -232,6 +241,6 @@ class Users extends WebService {
         }
 
         $response->addHeader("X-Delete-Count", $affectedRows);
-        $response->setStatus(200);
+        $response->setStatusCode(200);
     }
 }

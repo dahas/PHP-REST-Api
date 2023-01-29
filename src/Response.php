@@ -10,7 +10,7 @@ class Response implements ResponseInterface {
     private array $headers = [];
     private string $body = "";
 
-    public function setStatus(int $status): void
+    public function setStatusCode(int $status): void
     {
         $this->status = $status;
     }
