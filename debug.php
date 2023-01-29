@@ -4,16 +4,16 @@ use RESTapi\Sources\Api;
 use RESTapi\Sources\Request;
 use RESTapi\Sources\Response;
 
-require __DIR__ . '/vendor/autoload.php';
+require 'vendor/autoload.php';
 
 include("settings.php");
 
 /************** METHOD: ***************/
-$_SERVER['REQUEST_METHOD'] = 'GET';  # 'GET', 'POST', 'PUT', 'DELETE'
+$_SERVER['REQUEST_METHOD'] = 'GET'; # 'GET', 'POST', 'PUT', 'DELETE'
 
 /*********** AUTHENTICATE: ************/
-$_SERVER['PHP_AUTH_USER'] = 'localtest';
-$_SERVER['PHP_AUTH_PW'] = 'secret';
+$_SERVER['PHP_AUTH_USER'] = 'rest';
+$_SERVER['PHP_AUTH_PW'] = 'test';
 
 /************* API CALL: **************/
 $_SERVER['REQUEST_URI'] = "/v1/Users";
@@ -26,4 +26,4 @@ $_POST['country'] = "California";
 
 
 $api = new Api();
-$api->handle(new Request(), new Response());
+$api->verify(new Request(), new Response());

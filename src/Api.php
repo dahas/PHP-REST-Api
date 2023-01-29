@@ -2,6 +2,7 @@
 
 namespace RESTapi\Sources;
 
+use RESTapi\Library\Authentication;
 use RESTapi\Sources\interfaces\ApiInterface;
 
 class Api implements ApiInterface {
@@ -13,14 +14,42 @@ class Api implements ApiInterface {
         $this->loader = new Loader();
     }
 
+
+    public function verify(Request $request, Response $response): void
+    {
+        if (!SETTINGS["authentication"]["required"]) {
+            $this->handle($request, $response);
+            return;
+        }
+
+        $username = $request->getUsername();
+        $password = $request->getPassword();
+
+        $auth = new Authentication($username, $password);
+        $isAuthorized = $auth(fn(bool $verified) => $verified);
+        if ($isAuthorized) {
+            $this->handle($request, $response);
+        } else {
+            $json = json_encode([
+                "status" => "error",
+                "message" => "Access denied!"
+            ]);
+
+            $response->write($json);
+            $response->setStatusCode(401);
+            $response->flush();
+        }
+    }
+
+
     public function handle(Request $request, Response $response): void
     {
         $method = $request->getMethod();
         $version = $request->getVersion();
-        $view = $request->getView();
+        $service = $request->getService();
 
-        if ($version && $view) {
-            $service = $this->loader->loadWebService($version, $view);
+        if ($version && $service) {
+            $service = $this->loader->loadWebService($version, $service);
             $service->$method($request, $response);
         } else {
             $json = json_encode([
@@ -32,10 +61,11 @@ class Api implements ApiInterface {
                     "item" => "domain.tld/v1/Users/36"
                 ]
             ]);
+
             $response->write($json);
             $response->setStatusCode(400);
         }
-            
+
         $response->flush();
     }
 }

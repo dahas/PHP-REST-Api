@@ -6,6 +6,8 @@ use RESTapi\Sources\interfaces\RequestInterface;
 
 final class Request implements RequestInterface
 {
+    private string $username;
+    private string $password;
     private string $method;
     private array $parameters;
     private string $version = "";
@@ -14,6 +16,9 @@ final class Request implements RequestInterface
 
     public function __construct()
     {
+        $this->username = $_SERVER['PHP_AUTH_USER'] ?? "";
+        $this->password = $_SERVER['PHP_AUTH_PW'] ?? "";
+        
         $this->method = $_SERVER['REQUEST_METHOD'] ?? "GET";
 
         $uri = $_SERVER['REQUEST_URI'] ?? "";
@@ -22,12 +27,22 @@ final class Request implements RequestInterface
         $this->parseParameters();
     }
 
+    public function getUsername(): string
+    {
+        return $this->username;
+    }
+
+    public function getPassword(): string
+    {
+        return $this->password;
+    }
+
     public function getVersion(): string
     {
         return $this->version;
     }
 
-    public function getView(): string
+    public function getService(): string
     {
         return $this->view;
     }

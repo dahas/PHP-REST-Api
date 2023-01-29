@@ -5,6 +5,20 @@ namespace RESTapi\Sources\interfaces;
 interface RequestInterface {
 
     /**
+     * Get the username from HTTP basic authentification.
+     * @return string
+     */
+    public function getUsername(): string;
+
+
+    /**
+     * Get the password from HTTP basic authentification.
+     * @return string
+     */
+    public function getPassword(): string;
+
+
+    /**
      * Returns the version part of the request URI.
      * @return string
      */
@@ -15,7 +29,7 @@ interface RequestInterface {
      * Returns the name of the requested Service.
      * @return string
      */
-    public function getView(): string;
+    public function getService(): string;
 
 
     /**

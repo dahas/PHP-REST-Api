@@ -2,9 +2,8 @@
 
 namespace RESTapi\Library;
 
+class Database {
 
-class Database
-{
     private static $instance = null;
     private $conn = null;
     private $dbExists = false;
@@ -18,6 +17,7 @@ class Database
     protected function __construct()
     {
         $dbConf = SETTINGS["database"][SETTINGS["db_type"]];
+
         $this->db = $dbConf["db_name"];
         $this->host = $dbConf["host"];
         $this->user = $dbConf["username"];
@@ -55,7 +55,7 @@ class Database
 
     public function dbCheck()
     {
-        if (! $this->conn || ! $this->dbExists) {
+        if (!$this->conn || !$this->dbExists) {
             return false;
         } else {
             return true;
@@ -65,12 +65,12 @@ class Database
 
     public function dbInfo()
     {
-        if (! $this->conn) {
+        if (!$this->conn) {
             $info = [
                 "status" => "error",
                 "message" => "Connection to database failed! Supply the mandatory settings first."
             ];
-        } else if (! $this->dbExists) {
+        } else if (!$this->dbExists) {
             $info = [
                 "status" => "error",
                 "message" => "Database '$this->db' does not exist."
@@ -192,8 +192,7 @@ class Database
 
 }
 
-class Recordset
-{
+class Recordset {
     private $recordset = null;
 
 
@@ -236,8 +235,7 @@ class Recordset
 
 
 
-class Record
-{
+class Record {
     private $record = null;
 
 

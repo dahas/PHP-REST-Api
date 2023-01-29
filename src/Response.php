@@ -10,6 +10,11 @@ class Response implements ResponseInterface {
     private array $headers = [];
     private string $body = "";
 
+    public function __construct()
+    {
+        $this->headers["Content-Type"] = SETTINGS["response_content_type"];
+    }
+
     public function setStatusCode(int $status): void
     {
         $this->status = $status;
@@ -27,7 +32,7 @@ class Response implements ResponseInterface {
 
     public function flush(): void
     {
-        header("HTTP/1.0 {$this->status}");
+        header("HTTP/2.0 {$this->status}");
 
         foreach ($this->headers as $name => $value) {
             header("{$name}: {$value}");
