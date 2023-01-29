@@ -19,9 +19,23 @@ class Api implements ApiInterface {
         $version = $request->getVersion();
         $view = $request->getView();
 
-        $service = $this->loader->loadWebService($version, $view);
-        $service->$method($request, $response);
-        
+        if ($version && $view) {
+            $service = $this->loader->loadWebService($version, $view);
+            $service->$method($request, $response);
+        } else {
+            $json = json_encode([
+                "status" => "error",
+                "message" => "No URI!",
+                "usage" => "domain.tld/[version]/[service]/[id]",
+                "examples" => [
+                    "collection" => "domain.tld/v1/Users",
+                    "item" => "domain.tld/v1/Users/36"
+                ]
+            ]);
+            $response->write($json);
+            $response->setStatusCode(400);
+        }
+            
         $response->flush();
     }
 }

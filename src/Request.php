@@ -66,7 +66,7 @@ final class Request implements RequestInterface
 
     public function getMethod(): string
     {
-        return $this->method;
+        return strtolower($this->method);
     }
 
     private function parseUri(string $uri): void
