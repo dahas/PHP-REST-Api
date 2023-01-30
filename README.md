@@ -2,6 +2,8 @@
 
 This is a scalable PHP REST-Api using Basic HTTP Authentication. Since Basic HTTP Authentication is encoded but NOT encrypted it is highly recommended to use a secure connection (HTTPS) and a strong password.
 
+Do not use this API for handling sensitive data. Go to Symfony or Laravel in this case.
+
 ## How to use:
 
 ### Set up a MySQL database
