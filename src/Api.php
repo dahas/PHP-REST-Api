@@ -50,11 +50,21 @@ class Api implements ApiInterface {
 
         if ($version && $service) {
             $service = $this->loader->loadWebService($version, $service);
-            $service->$method($request, $response);
+            if ($service) {
+                $service->$method($request, $response);
+            } else {
+                $json = json_encode([
+                    "status" => "error",
+                    "message" => "Service not found!"
+                ]);
+
+                $response->write($json);
+                $response->setStatusCode(404);
+            }
         } else {
             $json = json_encode([
                 "status" => "error",
-                "message" => "No URI!",
+                "message" => "No valid URI!",
                 "usage" => "domain.tld/[version]/[service]/[id]",
                 "examples" => [
                     "collection" => "domain.tld/v1/Users",
