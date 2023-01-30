@@ -1,6 +1,8 @@
 <?php
 
-// Authetication:
+// Start webserver: php -S localhost:2400 -t public
+
+// Set credentials:
 $username = "rest";
 $password = "test";
 
