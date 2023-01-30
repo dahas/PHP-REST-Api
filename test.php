@@ -3,7 +3,7 @@
 // Start webserver: php -S localhost:2400 -t public
 
 // Set credentials:
-$username = "arest";
+$username = "rest";
 $password = "test";
 
 // Which method do you want to test? 
