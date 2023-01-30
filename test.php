@@ -3,7 +3,7 @@
 // Start webserver: php -S localhost:2400 -t public
 
 // Set credentials:
-$username = "rest";
+$username = "arest";
 $password = "test";
 
 // Which method do you want to test? 
@@ -11,7 +11,7 @@ $password = "test";
 $requestMethod = 'GET';
 
 // URL:
-$url = 'http://localhost:2400/v1/Users/11';
+$url = 'http://localhost:2400/v1/Users/1';
 
 switch ($requestMethod) {
     case "GET":

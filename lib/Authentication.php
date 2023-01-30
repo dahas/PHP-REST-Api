@@ -2,17 +2,41 @@
 
 namespace RESTapi\Library;
 
-class Authentication {
+use RESTapi\Sources\interfaces\ApiInterface;
+use RESTapi\Sources\Api;
+use RESTapi\Sources\Request;
+use RESTapi\Sources\Response;
 
-    public function __construct(public string $username, public string $password)
+class Authentication implements ApiInterface {
+
+    public function __construct(private Api $api)
     {
     }
 
 
-    public function __invoke(callable $next)
+    public function handle(Request $request, Response $response): void
     {
-        $verified = $this->authenticate();
-        return $next($verified);
+        if (!SETTINGS["authentication"]["required"]) {
+            $this->api->handle($request, $response);
+            return;
+        }
+
+        $username = $request->getUsername();
+        $password = $request->getPassword();
+
+        if ($this->authenticate($username, $password)) {
+            $this->api->handle($request, $response);
+            return;
+        }
+
+        $json = json_encode([
+            "status" => "error",
+            "message" => "Access denied!"
+        ]);
+
+        $response->write($json);
+        $response->setStatusCode(401);
+        $response->flush();
     }
 
 
@@ -20,11 +44,11 @@ class Authentication {
      * Verify credentials.
      * @return bool
      */
-    private function authenticate(): bool
+    private function authenticate(string $username, string $password): bool
     {
         /**
-         * ToDo: Implement your authentication logic here ...
+         * ToDo: Implement some authentication logic here ...
          */
-        return $this->username == "rest" && $this->password == "test";
+        return $username == "rest" && $password == "test";
     }
 }

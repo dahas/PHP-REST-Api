@@ -1,5 +1,6 @@
 <?php
 
+use RESTapi\Library\Authentication;
 use RESTapi\Sources\Api;
 use RESTapi\Sources\Request;
 use RESTapi\Sources\Response;
@@ -16,4 +17,5 @@ if (!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW'])) {
 }
 
 $api = new Api();
-$api->verify(new Request(), new Response());
+$auth = new Authentication($api);
+$auth->handle(new Request(), new Response());

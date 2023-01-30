@@ -2,7 +2,6 @@
 
 namespace RESTapi\Sources;
 
-use RESTapi\Library\Authentication;
 use RESTapi\Sources\interfaces\ApiInterface;
 
 class Api implements ApiInterface {
@@ -12,33 +11,6 @@ class Api implements ApiInterface {
     public function __construct()
     {
         $this->loader = new Loader();
-    }
-
-
-    public function verify(Request $request, Response $response): void
-    {
-        if (!SETTINGS["authentication"]["required"]) {
-            $this->handle($request, $response);
-            return;
-        }
-
-        $username = $request->getUsername();
-        $password = $request->getPassword();
-
-        $auth = new Authentication($username, $password);
-        $isAuthorized = $auth(fn(bool $verified) => $verified);
-        if ($isAuthorized) {
-            $this->handle($request, $response);
-        } else {
-            $json = json_encode([
-                "status" => "error",
-                "message" => "Access denied!"
-            ]);
-
-            $response->write($json);
-            $response->setStatusCode(401);
-            $response->flush();
-        }
     }
 
 

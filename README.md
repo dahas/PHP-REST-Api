@@ -14,8 +14,11 @@ Set up a MySQL server and execute `example_database.sql`. Enter the related MySQ
 $ php -S localhost:2400 -t public
 ```
 
+### Authentication
+Authentication is enabled by default. You can disable it in `settings.php`.
+
 ### Set credentials
-These cresentials are currently hard coded. Implement a proper authentication logic in `lib/Authentication` middleware.
+The below credentials are currently hard coded in `lib/Authentication` middleware. It's up to you to implement a proper logic.
 ```
 $username = "rest";
 $password = "test";
