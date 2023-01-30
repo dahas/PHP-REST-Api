@@ -1,8 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace RESTapi\Sources;
+namespace RESTapi\Library;
 
 use RESTapi\Sources\interfaces\ApiInterface;
+use RESTapi\Sources\Loader;
+use RESTapi\Sources\Request;
+use RESTapi\Sources\Response;
 
 class Api implements ApiInterface {
 

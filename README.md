@@ -119,7 +119,9 @@ curl_close($ch);
 ```
 
 # Adding Middleware
-Below is an example pattern that you can use to build your own middleware. Middleware belongs into the `lib` folder and implements the *ApiInterface*.
+Below is an example pattern that you can use to build your own middleware. Middleware belongs into the `lib` folder and implements the *ApiInterface*.  
+
+You can inject every other middleware into the constructor of a middleware. Bear in mind that the *Api* itself is treated like a middleware.
 ```
 class Middleware implements ApiInterface {
 
@@ -132,7 +134,7 @@ class Middleware implements ApiInterface {
     {
         // 1. Add your logic ...
 
-        // 2. Handle Api ...
+        // 2. Handle Api (or middleware) ...
         $this->api->handle($request, $response);
 
         // 3. Do something afterwards ...

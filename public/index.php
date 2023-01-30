@@ -1,7 +1,7 @@
 <?php
 
 use RESTapi\Library\Authentication;
-use RESTapi\Sources\Api;
+use RESTapi\Library\Api;
 use RESTapi\Sources\Request;
 use RESTapi\Sources\Response;
 

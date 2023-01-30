@@ -3,7 +3,7 @@
 namespace RESTapi\Library;
 
 use RESTapi\Sources\interfaces\ApiInterface;
-use RESTapi\Sources\Api;
+use RESTapi\Library\Api;
 use RESTapi\Sources\Request;
 use RESTapi\Sources\Response;
 
