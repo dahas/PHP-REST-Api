@@ -15,7 +15,7 @@ $ php -S localhost:2400 -t public
 ```
 
 ### Set credentials
-These cresentials are currently hard coded. Implement a proper authentication logic in `lib/Authentication.php`.
+These cresentials are currently hard coded. Implement a proper authentication logic in `lib/Authentication` middleware.
 ```
 $username = "rest";
 $password = "test";
