@@ -4,27 +4,29 @@ This is a scalable PHP REST-Api using Basic HTTP Authentication. Since Basic HTT
 
 Do not use this API for handling sensitive data. Go to Symfony or Laravel in this case.
 
-## How to use:
+# Configuration
 
-### Set up a MySQL database
+## Set up a MySQL database
 Set up a MySQL server and execute `example_database.sql`. Enter the related MySQL parameters in `settings.php`.
 
-### Launch PHP build in webserver
+## Launch PHP build in webserver
 ```
 $ php -S localhost:2400 -t public
 ```
 
-### Authentication
+## Authentication
 Authentication is enabled by default. You can disable it in `settings.php`.
 
-### Set credentials
+## Set credentials
 The below credentials are currently hard coded in `lib/Authentication` middleware. It's up to you to implement a proper logic.
 ```
 $username = "rest";
 $password = "test";
 ```
 
-### Get a collection
+# How to use
+
+## Get a collection
 Usage: `GET domain.tld/[version]/[service]`
 ```
 $ch = curl_init("http://localhost:2400/v1/Users/");
@@ -39,7 +41,7 @@ if (!$output = curl_exec($ch)) {
 curl_close($ch);
 ```
 
-### Get a single item
+## Get a single item
 Usage: `GET domain.tld/[version]/[service]/[id]`
 ```
 $ch = curl_init("http://localhost:2400/v1/Users/3");
@@ -54,7 +56,7 @@ if (!$output = curl_exec($ch)) {
 curl_close($ch);
 ```
 
-### Create a new item
+## Create a new item
 Usage: `POST domain.tld/[version]/[service]`
 ```
 $postData = [
@@ -77,7 +79,7 @@ if (!$output = curl_exec($ch)) {
 curl_close($ch);
 ```
 
-### Update an item
+## Update an item
 Usage: `PUT domain.tld/[version]/[service]/[id]`
 ```
 $postData = [
@@ -100,7 +102,7 @@ if (!$output = curl_exec($ch)) {
 curl_close($ch);
 ```
 
-### Delete an item
+## Delete an item
 Usage: `DELETE domain.tld/[version]/[service]/[id]`
 ```
 $ch = curl_init("http://localhost:2400/v1/Users/1");
@@ -114,6 +116,28 @@ if (!$output = curl_exec($ch)) {
 }
 
 curl_close($ch);
+```
+
+# Adding Middleware
+Below is an example pattern that you can use to build your own middleware. Middleware belongs into the `lib` folder and implements the *ApiInterface*.
+```
+class Middleware implements ApiInterface {
+
+    public function __construct(private Api $api)
+    {
+    }
+
+
+    public function handle(Request $request, Response $response): void
+    {
+        // 1. Add your logic ...
+
+        // 2. Handle Api ...
+        $this->api->handle($request, $response);
+
+        // 3. Do something afterwards ...
+    }
+}
 ```
 
 # Author:
