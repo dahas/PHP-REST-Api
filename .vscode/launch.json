@@ -1,0 +1,14 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "PHP App",
+            "type": "php",
+            "request": "launch",
+            "program": "${workspaceFolder}/test.php",
+            "args": [],
+            "externalConsole": false,
+            "port": 9003
+        } 
+    ]
+}

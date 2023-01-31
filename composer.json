@@ -16,6 +16,6 @@
       "RESTapi\\Sources\\": "src/",
       "RESTapi\\Services\\": "services/",
       "RESTapi\\Library\\": "lib/"
-  }
+    }
   }
 }
