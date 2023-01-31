@@ -68,7 +68,7 @@ class Database {
         if (!$this->conn) {
             $info = [
                 "status" => "error",
-                "message" => "Connection to database failed! Supply the mandatory settings first."
+                "message" => "Connection to database failed!"
             ];
         } else if (!$this->dbExists) {
             $info = [

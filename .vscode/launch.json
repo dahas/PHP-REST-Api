@@ -5,7 +5,7 @@
             "name": "PHP App",
             "type": "php",
             "request": "launch",
-            "program": "${workspaceFolder}/test.php",
+            "program": "${workspaceFolder}/debug.php",
             "args": [],
             "externalConsole": false,
             "port": 9003
