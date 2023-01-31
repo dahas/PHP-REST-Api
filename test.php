@@ -11,7 +11,7 @@ $password = "test";
 $requestMethod = 'GET';
 
 // URL:
-$url = 'http://localhost:2400/v1/Users/1';
+$url = 'http://localhost:2400/v1/Users';
 
 switch ($requestMethod) {
     case "GET":
