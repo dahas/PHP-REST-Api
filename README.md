@@ -97,7 +97,7 @@ class YourService extends Webservice {
 }
 ```
 > **Working with the database:**  
-> Please checkout the `Users` Service to learn and understand how to create queries for the CRUD operations.
+> Please checkout the `Users` Service to learn and understand how to create queries to perform CRUD operations.
 
 # How to use the Api <a name="use"></a>
 
