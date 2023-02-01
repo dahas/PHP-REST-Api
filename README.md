@@ -10,7 +10,8 @@ Do not use this API for handling sensitive data. Go to Symfony or Laravel in thi
     - [Launch PHP build in webserver](#serv)
     - [Authentication](#auth)
     - [Set credentials](#cred)
-1. [How to use](#use)
+1. [Create a Service](#srv)
+1. [How to use the Api](#use)
     - [Get a collection](#coll)
     - [Get a single item](#item)
     - [Create a new item](#new)
@@ -41,7 +42,62 @@ $username = "rest";
 $password = "test";
 ```
 
-# How to use <a name="use"></a>
+# Create a Service <a name="srv"></a>
+You create services in the `services` directory and the specific version folder. A Service always inherits from abstract class *WebService*. Here is a basic template that you can use to quickly get started:
+```php
+use RESTapi\Sources\Request;
+use RESTapi\Sources\Response;
+use RESTapi\Sources\WebService;
+use RESTapi\Library\Database;
+
+class YourService extends Webservice {
+
+    private Database|null $db;
+
+    public function __construct()
+    {
+        $this->db = Database::getInstance();
+    }
+
+    public function get(Request $request, Response $response) 
+    {
+        // Your logic here ...
+        $affectedRows = 12;
+        $response->write("JSON");
+        $response->addHeader("X-Data-Count", $affectedRows);
+        $response->setStatusCode(200);
+    }
+
+    public function post(Request $request, Response $response) 
+    {
+        // Your logic here ...
+        $affectedRows = 12;
+        $response->write("JSON");
+        $response->addHeader("X-Insert-Count", $affectedRows);
+        $response->setStatusCode(201);
+    }
+
+    public function put(Request $request, Response $response) 
+    {
+        // Your logic here ...
+        $affectedRows = 1;
+        $response->write("JSON");
+        $response->addHeader("X-Update-Count", $affectedRows);
+        $response->setStatusCode(204);
+    }
+
+    public function delete(Request $request, Response $response) 
+    {
+        // Your logic here ...
+        $affectedRows = 1;
+        $response->write("JSON");
+        $response->addHeader("X-Delete-Count", $affectedRows);
+        $response->setStatusCode(205);
+    }
+}
+```
+
+# How to use the Api <a name="use"></a>
 
 ## Get a collection <a name="coll"></a>
 Usage: `GET domain.tld/[version]/[service]`

@@ -8,7 +8,7 @@ use RESTapi\Library\Database;
 
 class Users extends WebService {
 
-    private Database $db;
+    private Database|null $db;
 
     public function __construct()
     {
@@ -180,7 +180,7 @@ class Users extends WebService {
             ]);
             $response->write($json);
             $response->addHeader("X-Update-Count", $affectedRows);
-            $response->setStatusCode(201);
+            $response->setStatusCode(204);
             return;
         }
         
@@ -195,7 +195,7 @@ class Users extends WebService {
                 "status" => "fail",
                 "message" => "Either no changes detected or the target record does not exist."
             ]);
-            $response->setStatusCode(204);
+            $response->setStatusCode(202);
         }
 
         $response->write($json);
