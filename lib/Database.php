@@ -250,7 +250,7 @@ class Record {
     }
 
 
-    public function getAll(): array
+    public function getRecord(): array
     {
         return (array) $this->record ?? [];
     }

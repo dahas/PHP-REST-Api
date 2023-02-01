@@ -47,7 +47,7 @@ class Users extends WebService {
 
         $users = [];
         while ($record = $recordset->next()) {
-            $users[] = $record->getAll();
+            $users[] = $record->getRecord();
         }
 
         if ($affectedRows == 0) {
