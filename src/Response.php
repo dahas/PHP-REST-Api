@@ -2,9 +2,9 @@
 
 namespace RESTapi\Sources;
 
-use RESTapi\Sources\interfaces\ResponseInterface;
+use RESTapi\Sources\interfaces\IResponse;
 
-class Response implements ResponseInterface {
+class Response implements IResponse {
 
     private int $status = 200;
     private array $headers = [];

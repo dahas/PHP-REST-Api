@@ -1,1 +1,1 @@
-{"version":1,"defects":{"UsersTest::testGet":3,"UsersTest::testNotFound":3},"times":{"UsersTest::testGet":0.004,"UsersTest::testNotFound":0.001}}
+{"version":1,"defects":{"UsersTest::testGet":3,"UsersTest::testNotFound":4,"UsersTest::testPut":3,"UsersTest::testDelete":3},"times":{"UsersTest::testGet":0.003,"UsersTest::testNotFound":0.001,"UsersTest::testPut":0.003,"UsersTest::testPost":0.01,"UsersTest::testDelete":0.018,"UsersTest::testNotAuthorized":0.001}}

@@ -2,12 +2,12 @@
 
 namespace RESTapi\Library;
 
-use RESTapi\Sources\interfaces\ApiInterface;
+use RESTapi\Sources\interfaces\IMiddleware;
 use RESTapi\Sources\Loader;
 use RESTapi\Sources\Request;
 use RESTapi\Sources\Response;
 
-class Api implements ApiInterface {
+class Controller implements IMiddleware {
 
     private Loader $loader;
 
@@ -15,7 +15,6 @@ class Api implements ApiInterface {
     {
         $this->loader = new Loader();
     }
-
 
     public function handle(Request $request, Response $response): void
     {

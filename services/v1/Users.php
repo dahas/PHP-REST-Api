@@ -47,7 +47,7 @@ class Users extends WebService {
 
         $users = [];
         while ($record = $recordset->next()) {
-            $users[] = $record;
+            $users[] = $record->getAll();
         }
 
         if ($affectedRows == 0) {
@@ -232,15 +232,15 @@ class Users extends WebService {
                 "delete_id" => $request->getID()
             ]);
             $response->write($json);
+            $response->addHeader("X-Delete-Count", $affectedRows);
+            $response->setStatusCode(205);
         } else {
             $json = json_encode([
                 "status" => "fail",
                 "message" => "Record not found."
             ]);
             $response->write($json);
+            $response->setStatusCode(404);
         }
-
-        $response->addHeader("X-Delete-Count", $affectedRows);
-        $response->setStatusCode(200);
     }
 }

@@ -2,23 +2,23 @@
 
 namespace RESTapi\Sources;
 
-use RESTapi\Sources\interfaces\RequestInterface;
+use RESTapi\Sources\interfaces\IRequest;
 
-final class Request implements RequestInterface
-{
+final class Request implements IRequest {
+
     private string $username;
     private string $password;
     private string $method;
     private array $parameters;
     private string $version = "";
-    private string $view = "";
+    private string $service = "";
     private int $identifier = 0;
 
     public function __construct()
     {
         $this->username = $_SERVER['PHP_AUTH_USER'] ?? "";
         $this->password = $_SERVER['PHP_AUTH_PW'] ?? "";
-        
+
         $this->method = $_SERVER['REQUEST_METHOD'] ?? "GET";
 
         $uri = $_SERVER['REQUEST_URI'] ?? "";
@@ -44,7 +44,7 @@ final class Request implements RequestInterface
 
     public function getService(): string
     {
-        return $this->view;
+        return $this->service;
     }
 
     public function getID(): int
@@ -94,7 +94,7 @@ final class Request implements RequestInterface
             $this->version = $segments[0];
         }
         if (isset($segments[1])) {
-            $this->view = $segments[1];
+            $this->service = $segments[1];
         }
         if (isset($segments[2])) {
             $this->identifier = intval($segments[2]);
@@ -117,7 +117,7 @@ final class Request implements RequestInterface
     }
 
     private function filterInput($input)
-	{
-		return filter_var(rawurldecode($input), FILTER_SANITIZE_STRING);
-	}
+    {
+        return filter_var(rawurldecode($input), FILTER_SANITIZE_STRING);
+    }
 }

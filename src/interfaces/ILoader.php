@@ -4,7 +4,7 @@ namespace RESTapi\Sources\interfaces;
 
 use RESTapi\Sources\WebService;
 
-interface LoaderInterface {
+interface ILoader {
 
     /**
      * Use this method to create an instance of a specific Service.

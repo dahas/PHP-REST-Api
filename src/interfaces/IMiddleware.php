@@ -5,10 +5,10 @@ namespace RESTapi\Sources\interfaces;
 use RESTapi\Sources\Request;
 use RESTapi\Sources\Response;
 
-interface ApiInterface {
-
+interface IMiddleware
+{
     /**
-     * Handle the Request, create the Service and return the Response.
+     * Handle the Request and return the Response.
      * <hr>
      * @param Request $request The Request object
      * @param Response $response The Response object

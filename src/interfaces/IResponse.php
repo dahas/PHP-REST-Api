@@ -2,7 +2,7 @@
 
 namespace RESTapi\Sources\interfaces;
 
-interface ResponseInterface {
+interface IResponse {
 
     /**
      * Adds content to the Response body.

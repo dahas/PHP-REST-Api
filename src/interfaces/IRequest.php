@@ -2,8 +2,8 @@
 
 namespace RESTapi\Sources\interfaces;
 
-interface RequestInterface {
-
+interface IRequest {
+    
     /**
      * Get the username from HTTP basic authentification.
      * @return string

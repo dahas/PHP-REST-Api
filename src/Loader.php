@@ -2,10 +2,10 @@
 
 namespace RESTapi\Sources;
 
-use RESTapi\Sources\interfaces\LoaderInterface;
+use RESTapi\Sources\interfaces\ILoader;
 use RESTapi\Sources\WebService;
 
-final class Loader implements LoaderInterface {
+final class Loader implements ILoader {
 
     public function loadWebService(string $version, string $name): WebService|null
     {

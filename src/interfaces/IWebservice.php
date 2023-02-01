@@ -5,7 +5,7 @@ namespace RESTapi\Sources\interfaces;
 use RESTapi\Sources\Request;
 use RESTapi\Sources\Response;
 
-interface WebServiceInterface {
+interface IWebservice {
 
     /**
      * Retrieve a collection:

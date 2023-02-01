@@ -4,17 +4,17 @@ namespace RESTapi\Library;
 
 class Database {
 
-    private static $instance = null;
-    private $conn = null;
-    private $dbExists = false;
-    private $db = "";
-    private $host = "";
-    private $user = "";
-    private $pass = "";
-    private $charset = "";
+    private static $instance;
+    private mixed $conn;
+    private bool $dbExists;
+    private string $db;
+    private string $host;
+    private string $user;
+    private string $pass;
+    private string $charset;
 
 
-    protected function __construct()
+    private function __construct()
     {
         $dbConf = SETTINGS["database"][SETTINGS["db_type"]];
 
@@ -43,7 +43,7 @@ class Database {
     }
 
 
-    public static function getInstance()
+    public static function getInstance(): Database|null
     {
         if (self::$instance == null) {
             self::$instance = new Database();
@@ -53,7 +53,7 @@ class Database {
     }
 
 
-    public function dbCheck()
+    public function dbCheck(): bool
     {
         if (!$this->conn || !$this->dbExists) {
             return false;
@@ -63,7 +63,7 @@ class Database {
     }
 
 
-    public function dbInfo()
+    public function dbInfo(): array
     {
         if (!$this->conn) {
             $info = [
@@ -84,7 +84,7 @@ class Database {
     }
 
 
-    public function select($conf)
+    public function select(array $conf): Recordset
     {
         $sql = "SELECT";
         if (isset($conf['columns'])) {
@@ -116,7 +116,7 @@ class Database {
     }
 
 
-    public function insert($conf)
+    public function insert(array $conf): int
     {
         $sql = "INSERT INTO";
         if (isset($conf['into'])) {
@@ -145,7 +145,7 @@ class Database {
     }
 
 
-    public function update($conf)
+    public function update(array $conf): int
     {
         $sql = "UPDATE";
         if (isset($conf['table'])) {
@@ -166,7 +166,7 @@ class Database {
     }
 
 
-    public function delete($conf)
+    public function delete(array $conf): int
     {
         $sql = "DELETE FROM";
         if (isset($conf['from'])) {
@@ -193,6 +193,7 @@ class Database {
 }
 
 class Recordset {
+
     private $recordset = null;
 
 
@@ -202,23 +203,26 @@ class Recordset {
     }
 
 
-    public function getRecordCount()
+    public function getRecordCount(): int
     {
-        return $this->recordset ? mysqli_num_rows($this->recordset) : 0;
+        return $this->recordset instanceof \mysqli_result ? 
+            mysqli_num_rows($this->recordset) : 0;
     }
 
 
-    public function reset()
+    public function reset(): void
     {
-        return $this->recordset ? mysqli_data_seek($this->recordset, 0) : null;
+        if($this->recordset instanceof \mysqli_result) {
+            mysqli_data_seek($this->recordset, 0);
+        }
     }
 
 
-    public function next()
+    public function next(): object|null
     {
         $record = $this->recordset ? mysqli_fetch_object($this->recordset) : null;
         if ($record) {
-            return $record;
+            return new Record($record);
         } else {
             return null;
         }
@@ -236,6 +240,7 @@ class Recordset {
 
 
 class Record {
+    
     private $record = null;
 
 
@@ -245,13 +250,19 @@ class Record {
     }
 
 
-    public function getProperty($item)
+    public function getAll(): array
+    {
+        return (array) $this->record ?? [];
+    }
+
+
+    public function getProperty(string $item): mixed
     {
         return $this->record->$item ?? null;
     }
 
 
-    public function setProperty($item, $value)
+    public function setProperty(string $item, mixed $value): void
     {
         $this->record->$item = $value;
     }

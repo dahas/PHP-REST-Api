@@ -118,28 +118,48 @@ if (!$output = curl_exec($ch)) {
 curl_close($ch);
 ```
 
+# HTTP STATUS Codes
+The API responds with the following Status Codes:  
+
+- GET: 200 OK
+- POST: 201 Created
+- PUT: 204 No Content
+- DELETE: 205 Reset Content  
+<br>
+- 400 Bad Request
+- 401 Unauthorized
+- 404 Not Found  
+<br>  
+- 500 Internal Server Error
+
 # Adding Middleware
-Below is an example pattern that you can use to build your own middleware. Middleware belongs into the `lib` folder and implements the *ApiInterface*.  
-
-You can inject every other middleware into the constructor of a middleware. Bear in mind that the *Api* itself is treated like a middleware.
+Below is an example pattern that you can use to build your own middleware. You can create your own middleware by creating a class in the `lib` folder that implements the *IMiddleware* interface:
 ```
-class Middleware implements ApiInterface {
+class YourMiddleware implements IMiddleware {
 
-    public function __construct(private Api $api)
-    {
-    }
+    public function handle(Request $request, Response $response): void {}
+}
+```
+To inject middleware into another middleware use the constructor of that middleware:
+```
+class YourMiddleware implements IMiddleware {
 
+    public function __construct(private IMiddleware $anotherMiddleware) {}
 
     public function handle(Request $request, Response $response): void
     {
         // 1. Add your logic ...
 
-        // 2. Handle Api (or middleware) ...
-        $this->api->handle($request, $response);
+        // 2. Handle Middleware ...
+        $this->anotherMiddleware->handle($request, $response);
 
         // 3. Do something afterwards ...
     }
 }
+
+$anotherMiddleware = new AnotherMiddleware();
+$yourMiddleware = new YourMiddleware($anotherMiddleware);
+$yourMiddleware->handle($request, $response);
 ```
 
 # Author:
