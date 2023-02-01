@@ -72,7 +72,7 @@ class UsersTest extends TestCase {
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $output = curl_exec($ch);
         curl_close($ch);
-        $this->assertStringContainsString("HTTP/2.0 204", $output);
+        $this->assertStringContainsString("HTTP/2.0 202", $output);
     }
 
     public function testDelete()
