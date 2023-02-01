@@ -2,7 +2,6 @@
 
 use RESTapi\Library\Authentication;
 use RESTapi\Library\Controller;
-use RESTapi\Library\YourMiddleware;
 use RESTapi\Sources\Request;
 use RESTapi\Sources\Response;
 
@@ -17,6 +16,10 @@ if (!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW'])) {
     exit;
 }
 
+$request = new Request();
+$response = new Response();
 $controller = new Controller();
 $auth = new Authentication($controller);
-$auth->handle(new Request(), new Response());
+$auth->handle($request, $response);
+
+$response->flush();

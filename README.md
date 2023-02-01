@@ -130,7 +130,7 @@ The API responds with the following Status Codes:
 - 401 Unauthorized
 - 404 Not Found  
 <br>  
-- 500 Internal Server Error
+- 500 Internal Server Error 
 
 # Adding Middleware
 Below is an example pattern that you can use to build your own middleware. You can create your own middleware by creating a class in the `lib` folder that implements the *IMiddleware* interface:

@@ -34,7 +34,6 @@ class Authentication implements IMiddleware {
 
         $response->write($json);
         $response->setStatusCode(401);
-        $response->flush();
     }
 
     /**

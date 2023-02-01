@@ -49,7 +49,5 @@ class Controller implements IMiddleware {
             $response->write($json);
             $response->setStatusCode(400);
         }
-
-        $response->flush();
     }
 }
