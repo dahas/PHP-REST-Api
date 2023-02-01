@@ -7,7 +7,7 @@ use RESTapi\Sources\WebService;
 interface ILoader {
 
     /**
-     * Use this method to create an instance of a specific Service.
+     * Create an instance of a specific Service.
      * <hr>
      * @param string $version The version string. E.g.: "v2"
      * @param string $name The name of the Service.
