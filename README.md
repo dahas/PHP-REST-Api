@@ -198,7 +198,7 @@ On Success:
 
 - GET: 200 OK
 - POST: 201 Created
-- PUT: 204 No Content
+- PUT: 204 No Content or 202 Accepted
 - DELETE: 205 Reset Content
 
 Otherwise:
