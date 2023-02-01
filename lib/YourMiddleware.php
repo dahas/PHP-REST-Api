@@ -11,6 +11,5 @@ class YourMiddleware implements IMiddleware {
     public function handle(Request $request, Response $response): void
     {
         $response->write("Hello from your Middleware!");
-        $response->flush();
     }
 }
