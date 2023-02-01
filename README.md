@@ -125,11 +125,11 @@ The API responds with the following Status Codes:
 - POST: 201 Created
 - PUT: 204 No Content
 - DELETE: 205 Reset Content  
-<br>
+
 - 400 Bad Request
 - 401 Unauthorized
 - 404 Not Found  
-<br>  
+
 - 500 Internal Server Error 
 
 # Adding Middleware
