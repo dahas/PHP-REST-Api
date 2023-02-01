@@ -19,7 +19,7 @@ Authentication is enabled by default. You can disable it in `settings.php`.
 
 ## Set credentials
 The below credentials are currently hard coded in `lib/Authentication` middleware. It's up to you to implement a proper logic.
-```
+```php
 $username = "rest";
 $password = "test";
 ```
@@ -28,7 +28,7 @@ $password = "test";
 
 ## Get a collection
 Usage: `GET domain.tld/[version]/[service]`
-```
+```php
 $ch = curl_init("http://localhost:2400/v1/Users/");
 curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
 curl_setopt($ch, CURLOPT_USERPWD, "$username:$password");
@@ -43,7 +43,7 @@ curl_close($ch);
 
 ## Get a single item
 Usage: `GET domain.tld/[version]/[service]/[id]`
-```
+```php
 $ch = curl_init("http://localhost:2400/v1/Users/3");
 curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
 curl_setopt($ch, CURLOPT_USERPWD, "$username:$password");
@@ -58,7 +58,7 @@ curl_close($ch);
 
 ## Create a new item
 Usage: `POST domain.tld/[version]/[service]`
-```
+```php
 $postData = [
     "name" => "Greta Garbo",
     "age" => "93",
@@ -81,7 +81,7 @@ curl_close($ch);
 
 ## Update an item
 Usage: `PUT domain.tld/[version]/[service]/[id]`
-```
+```php
 $postData = [
     "name" => "John Rambo",
     "age" => "42",
@@ -104,7 +104,7 @@ curl_close($ch);
 
 ## Delete an item
 Usage: `DELETE domain.tld/[version]/[service]/[id]`
-```
+```php
 $ch = curl_init("http://localhost:2400/v1/Users/1");
 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
 curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
@@ -137,14 +137,14 @@ Otherwise:
 
 # Adding Middleware
 Below is an example pattern that you can use to build your own middleware. You can create your own middleware by creating a class in the `lib` folder that implements the *IMiddleware* interface:
-````
+```php
 class YourMiddleware implements IMiddleware {
 
     public function handle(Request $request, Response $response): void {}
 }
-````
+```
 To inject middleware into another middleware use the constructor of that middleware:
-````
+```php
 class YourMiddleware implements IMiddleware {
 
     public function __construct(private IMiddleware $anotherMiddleware) {}
@@ -163,7 +163,7 @@ class YourMiddleware implements IMiddleware {
 $anotherMiddleware = new AnotherMiddleware();
 $yourMiddleware = new YourMiddleware($anotherMiddleware);
 $yourMiddleware->handle($request, $response);
-````
+```
 
 # Author:
 
