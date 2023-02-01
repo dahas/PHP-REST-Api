@@ -119,18 +119,16 @@ curl_close($ch);
 ```
 
 # HTTP STATUS Codes
-The API responds with the following Status Codes:  
+The API responds with the following Status Codes. You can change this to your liking:  
 
-- GET: 200 OK
-- POST: 201 Created
-- PUT: 204 No Content
-- DELETE: 205 Reset Content  
-
+- Successfull GET: 200 OK
+- Successfull POST: 201 Created
+- Successfull PUT: 204 No Content
+- Successfull DELETE: 205 Reset Content
 - 400 Bad Request
 - 401 Unauthorized
-- 404 Not Found  
-
-- 500 Internal Server Error 
+- 404 Not Found
+- 500 Internal Server Error
 
 # Adding Middleware
 Below is an example pattern that you can use to build your own middleware. You can create your own middleware by creating a class in the `lib` folder that implements the *IMiddleware* interface:
