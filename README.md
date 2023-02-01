@@ -59,38 +59,38 @@ class YourService extends WebService {
         $this->db = Database::getInstance();
     }
 
-    public function get(Request $request, Response $response) 
+    public function get(Request $request, Response $response): void 
     {
         // Your logic here ...
         $affectedRows = 12;
-        $response->write("JSON");
+        $response->write("JSON"); // Add a JSON object
         $response->addHeader("X-Data-Count", $affectedRows);
         $response->setStatusCode(200);
     }
 
-    public function post(Request $request, Response $response) 
+    public function post(Request $request, Response $response): void 
     {
         // Your logic here ...
         $affectedRows = 12;
-        $response->write("JSON");
+        $response->write("JSON"); // Add a JSON object
         $response->addHeader("X-Insert-Count", $affectedRows);
         $response->setStatusCode(201);
     }
 
-    public function put(Request $request, Response $response) 
+    public function put(Request $request, Response $response): void 
     {
         // Your logic here ...
         $affectedRows = 1;
-        $response->write("JSON");
+        $response->write("JSON"); // Add a JSON object
         $response->addHeader("X-Update-Count", $affectedRows);
         $response->setStatusCode(204);
     }
 
-    public function delete(Request $request, Response $response) 
+    public function delete(Request $request, Response $response): void 
     {
         // Your logic here ...
         $affectedRows = 1;
-        $response->write("JSON");
+        $response->write("JSON"); // Add a JSON object
         $response->addHeader("X-Delete-Count", $affectedRows);
         $response->setStatusCode(205);
     }

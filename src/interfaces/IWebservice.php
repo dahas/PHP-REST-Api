@@ -16,7 +16,7 @@ interface IWebservice {
      * @param Request $request The Request Object
      * @param Response $response The Response Object
      */
-    public function get(Request $request, Response $response);
+    public function get(Request $request, Response $response): void;
 
 
     /**
@@ -26,7 +26,7 @@ interface IWebservice {
      * @param Request $request The Request Object
      * @param Response $response The Response Object
      */
-    public function post(Request $request, Response $response);
+    public function post(Request $request, Response $response): void;
 
 
     /**
@@ -36,7 +36,7 @@ interface IWebservice {
      * @param Request $request The Request Object
      * @param Response $response The Response Object
      */
-    public function put(Request $request, Response $response);
+    public function put(Request $request, Response $response): void;
 
 
     /**
@@ -46,5 +46,5 @@ interface IWebservice {
      * @param Request $request The Request Object
      * @param Response $response The Response Object
      */
-    public function delete(Request $request, Response $response);
+    public function delete(Request $request, Response $response): void;
 }
