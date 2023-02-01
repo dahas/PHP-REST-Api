@@ -137,14 +137,14 @@ Otherwise:
 
 # Adding Middleware
 Below is an example pattern that you can use to build your own middleware. You can create your own middleware by creating a class in the `lib` folder that implements the *IMiddleware* interface:
-```
+````
 class YourMiddleware implements IMiddleware {
 
     public function handle(Request $request, Response $response): void {}
 }
-```
+````
 To inject middleware into another middleware use the constructor of that middleware:
-```
+````
 class YourMiddleware implements IMiddleware {
 
     public function __construct(private IMiddleware $anotherMiddleware) {}
@@ -163,7 +163,7 @@ class YourMiddleware implements IMiddleware {
 $anotherMiddleware = new AnotherMiddleware();
 $yourMiddleware = new YourMiddleware($anotherMiddleware);
 $yourMiddleware->handle($request, $response);
-```
+````
 
 # Author:
 
