@@ -50,7 +50,7 @@ use RESTapi\Sources\Response;
 use RESTapi\Sources\WebService;
 use RESTapi\Library\Database;
 
-class YourService extends Webservice {
+class YourService extends WebService {
 
     private Database|null $db;
 
