@@ -8,8 +8,6 @@ use RESTapi\Sources\Response;
 
 class YourMiddleware implements IMiddleware {
 
-    public function __construct() {}
-
     public function handle(Request $request, Response $response): void
     {
         $response->write("Hello from your Middleware!");
