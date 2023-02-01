@@ -121,10 +121,15 @@ curl_close($ch);
 # HTTP STATUS Codes
 The API responds with the following Status Codes. You can change this to your liking:  
 
-- Successfull GET: 200 OK
-- Successfull POST: 201 Created
-- Successfull PUT: 204 No Content
-- Successfull DELETE: 205 Reset Content
+On Success:
+
+- GET: 200 OK
+- POST: 201 Created
+- PUT: 204 No Content
+- DELETE: 205 Reset Content
+
+Otherwise:
+
 - 400 Bad Request
 - 401 Unauthorized
 - 404 Not Found
