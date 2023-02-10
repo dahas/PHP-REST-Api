@@ -1,8 +1,6 @@
 # REST-Api
 
-<img src="https://img.shields.io/badge/PHP-8.1.2-orange" /> <img src="https://img.shields.io/badge/Auth-Basic-green" /> <img src="https://img.shields.io/badge/Testing-PHPUnit-blue" />  
-
-<!-- ![GitHub Repo stars](https://img.shields.io/github/stars/dahas/PHP-REST-Api?style=social) -->
+<img src="https://img.shields.io/badge/PHP-8.1.2-orange" /> <img src="https://img.shields.io/badge/Auth-Basic-green" /> <img src="https://img.shields.io/badge/Testing-PHPUnit-blue" />
 
 This is a PHP REST-Api using Basic HTTP Authentication. Since Basic HTTP Authentication is encoded but NOT encrypted it is highly recommended to use a secure connection (HTTPS) and a strong password.
 
