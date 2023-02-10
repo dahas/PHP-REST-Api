@@ -12,6 +12,7 @@ final class Request implements IRequest {
     private array $parameters;
     private string $version = "";
     private string $service = "";
+    private string $action = "";
     private int $identifier = 0;
 
     public function __construct()
@@ -84,6 +85,11 @@ final class Request implements IRequest {
         return strtolower($this->method);
     }
 
+    public function getAction(): string
+    {
+        return strtolower($this->action);
+    }
+
     private function parseUri(string $uri): void
     {
         $arrUri = parse_url($uri);
@@ -97,7 +103,13 @@ final class Request implements IRequest {
             $this->service = $segments[1];
         }
         if (isset($segments[2])) {
-            $this->identifier = intval($segments[2]);
+            if(intval($segments[2])>0) {
+                $this->identifier = intval($segments[2]);
+                $this->action = "";
+            } else {
+                $this->identifier = 0;
+                $this->action = $segments[2];
+            }
         }
 
         $getVars = [];

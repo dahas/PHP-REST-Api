@@ -33,7 +33,7 @@ class Authentication implements IMiddleware {
         ]);
 
         $response->write($json);
-        $response->setStatusCode(401);
+        $response->setStatus(401);
     }
 
     /**

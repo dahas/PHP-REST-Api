@@ -18,14 +18,14 @@ class Controller implements IMiddleware {
 
     public function handle(Request $request, Response $response): void
     {
-        $method = $request->getMethod();
+        $func = $request->getAction() ? $request->getAction() : $request->getMethod();
         $version = $request->getVersion();
         $service = $request->getService();
 
         if ($version && $service) {
             $service = $this->loader->loadWebService($version, $service);
             if ($service) {
-                $service->$method($request, $response);
+                $service->$func($request, $response);
             } else {
                 $json = json_encode([
                     "status" => "error",
@@ -33,7 +33,7 @@ class Controller implements IMiddleware {
                 ]);
 
                 $response->write($json);
-                $response->setStatusCode(404);
+                $response->setStatus(404);
             }
         } else {
             $json = json_encode([
@@ -47,7 +47,7 @@ class Controller implements IMiddleware {
             ]);
 
             $response->write($json);
-            $response->setStatusCode(400);
+            $response->setStatus(400);
         }
     }
 }

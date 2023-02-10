@@ -20,7 +20,7 @@ class Users extends WebService {
         if (!$this->db->dbCheck()) {
             $json = json_encode($this->db->dbInfo());
             $response->write($json);
-            $response->setStatusCode(500);
+            $response->setStatus(500);
             return;
         }
 
@@ -39,7 +39,7 @@ class Users extends WebService {
                 "message" => "Query could not be executed."
             ]);
             $response->write($json);
-            $response->setStatusCode(500);
+            $response->setStatus(500);
             return;
         }
 
@@ -56,7 +56,7 @@ class Users extends WebService {
                 "message" => "No record found."
             ]);
             $response->write($json);
-            $response->setStatusCode(404);
+            $response->setStatus(404);
             return;
         }
 
@@ -78,7 +78,7 @@ class Users extends WebService {
 
         $response->write($json);
         $response->addHeader("X-Data-Count", $affectedRows);
-        $response->setStatusCode(200);
+        $response->setStatus(200);
     }
 
     public function post(Request $request, Response $response): void
@@ -86,7 +86,7 @@ class Users extends WebService {
         if (!$this->db->dbCheck()) {
             $json = json_encode($this->db->dbInfo());
             $response->write($json);
-            $response->setStatusCode(500);
+            $response->setStatus(500);
             return;
         }
 
@@ -115,7 +115,7 @@ class Users extends WebService {
                 "message" => "Query could not be executed."
             ]);
             $response->write($json);
-            $response->setStatusCode(500);
+            $response->setStatus(500);
             return;
         }
 
@@ -126,7 +126,7 @@ class Users extends WebService {
         ]);
         $response->write($json);
         $response->addHeader("X-Insert-Count", 1);
-        $response->setStatusCode(201);
+        $response->setStatus(201);
     }
 
     public function put(Request $request, Response $response): void
@@ -134,7 +134,7 @@ class Users extends WebService {
         if (!$this->db->dbCheck()) {
             $json = json_encode($this->db->dbInfo());
             $response->write($json);
-            $response->setStatusCode(500);
+            $response->setStatus(500);
             return;
         }
 
@@ -144,7 +144,7 @@ class Users extends WebService {
                 "message" => "Please provide a unique ID."
             ]);
             $response->write($json);
-            $response->setStatusCode(400);
+            $response->setStatus(400);
             return;
         }
 
@@ -180,7 +180,7 @@ class Users extends WebService {
             ]);
             $response->write($json);
             $response->addHeader("X-Update-Count", $affectedRows);
-            $response->setStatusCode(204);
+            $response->setStatus(204);
             return;
         }
         
@@ -189,13 +189,13 @@ class Users extends WebService {
                 "status" => "fail",
                 "message" => "Query could not be executed."
             ]);
-            $response->setStatusCode(500);
+            $response->setStatus(500);
         } else {
             $json = json_encode([
                 "status" => "fail",
                 "message" => "Either no changes detected or the target record does not exist."
             ]);
-            $response->setStatusCode(202);
+            $response->setStatus(202);
         }
 
         $response->write($json);
@@ -206,7 +206,7 @@ class Users extends WebService {
         if (!$this->db->dbCheck()) {
             $json = json_encode($this->db->dbInfo());
             $response->write($json);
-            $response->setStatusCode(500);
+            $response->setStatus(500);
             return;
         }
 
@@ -233,14 +233,14 @@ class Users extends WebService {
             ]);
             $response->write($json);
             $response->addHeader("X-Delete-Count", $affectedRows);
-            $response->setStatusCode(205);
+            $response->setStatus(205);
         } else {
             $json = json_encode([
                 "status" => "fail",
                 "message" => "Record not found."
             ]);
             $response->write($json);
-            $response->setStatusCode(404);
+            $response->setStatus(404);
         }
     }
 }

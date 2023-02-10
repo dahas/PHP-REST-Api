@@ -29,7 +29,7 @@ interface IResponse {
      * @param int $status The number of the HTTP Status.
      * @return void
      */
-    public function setStatusCode(int $status): void;
+    public function setStatus(int $status): void;
 
 
     /**

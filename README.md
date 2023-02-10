@@ -1,8 +1,14 @@
 # REST-Api
 
-This is a scalable PHP REST-Api using Basic HTTP Authentication. Since Basic HTTP Authentication is encoded but NOT encrypted it is highly recommended to use a secure connection (HTTPS) and a strong password.
+<img src="https://img.shields.io/badge/PHP-8.1.2-orange" />
+<img src="https://img.shields.io/badge/Auth-Basic-green" />
+<img src="https://img.shields.io/badge/Testing-PHPUnit-blue" />  
 
-Do not use this API for handling sensitive data. Go to Symfony or Laravel in this case.
+<!-- ![GitHub Repo stars](https://img.shields.io/github/stars/dahas/PHP-REST-Api?style=social) -->
+
+This is a PHP REST-Api using Basic HTTP Authentication. Since Basic HTTP Authentication is encoded but NOT encrypted it is highly recommended to use a secure connection (HTTPS) and a strong password.
+
+If you use this API for handling sensitive data, you do it at your own risk. 
 
 # Table of Contents
 1. [Configuration](#conf)  
@@ -17,7 +23,9 @@ Do not use this API for handling sensitive data. Go to Symfony or Laravel in thi
     - [Create a new item](#new)
     - [Update an item](#upd)
     - [Delete an item](#del)
-1. [HTTP STATUS Codes](#stat)
+1. [Extended usage](#ext)
+    - [Performing special tasks](#task)
+1. [HTTP Status Codes](#stat)
 1. [Adding Middleware](#mdw)
 1. [Author](#atr)
 1. [License](#mit)
@@ -65,7 +73,7 @@ class YourService extends WebService {
         $affectedRows = 12;
         $response->write("JSON"); // Add a JSON object
         $response->addHeader("X-Data-Count", $affectedRows);
-        $response->setStatusCode(200);
+        $response->setStatus(200);
     }
 
     public function post(Request $request, Response $response): void 
@@ -74,7 +82,7 @@ class YourService extends WebService {
         $affectedRows = 12;
         $response->write("JSON"); // Add a JSON object
         $response->addHeader("X-Insert-Count", $affectedRows);
-        $response->setStatusCode(201);
+        $response->setStatus(201);
     }
 
     public function put(Request $request, Response $response): void 
@@ -83,7 +91,7 @@ class YourService extends WebService {
         $affectedRows = 1;
         $response->write("JSON"); // Add a JSON object
         $response->addHeader("X-Update-Count", $affectedRows);
-        $response->setStatusCode(204);
+        $response->setStatus(204);
     }
 
     public function delete(Request $request, Response $response): void 
@@ -92,7 +100,7 @@ class YourService extends WebService {
         $affectedRows = 1;
         $response->write("JSON"); // Add a JSON object
         $response->addHeader("X-Delete-Count", $affectedRows);
-        $response->setStatusCode(205);
+        $response->setStatus(205);
     }
 }
 ```
@@ -134,7 +142,7 @@ curl_close($ch);
 ## Create a new item <a name="new"></a>
 Usage: `POST domain.tld/[version]/[service]`
 ```php
-$postData = [
+$body = [
     "name" => "Greta Garbo",
     "age" => "93",
     "city" => "Hollywood",
@@ -142,7 +150,7 @@ $postData = [
 ];
 $ch = curl_init("http://localhost:2400/v1/Users");
 curl_setopt($ch, CURLOPT_POST, true);
-curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postData));
+curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($body));
 curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
 curl_setopt($ch, CURLOPT_USERPWD, "$username:$password");
 curl_setopt($ch, CURLOPT_HEADER, true);
@@ -157,7 +165,7 @@ curl_close($ch);
 ## Update an item <a name="upd"></a>
 Usage: `PUT domain.tld/[version]/[service]/[id]`
 ```php
-$postData = [
+$body = [
     "name" => "John Rambo",
     "age" => "42",
     "city" => "Seattle",
@@ -165,7 +173,7 @@ $postData = [
 ];
 $ch = curl_init("http://localhost:2400/v1/Users/4");
 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
-curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postData));
+curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($body));
 curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
 curl_setopt($ch, CURLOPT_USERPWD, "$username:$password");
 curl_setopt($ch, CURLOPT_HEADER, true);
@@ -182,6 +190,35 @@ Usage: `DELETE domain.tld/[version]/[service]/[id]`
 ```php
 $ch = curl_init("http://localhost:2400/v1/Users/1");
 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
+curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+curl_setopt($ch, CURLOPT_USERPWD, "$username:$password");
+curl_setopt($ch, CURLOPT_HEADER, true);
+
+if (!$output = curl_exec($ch)) {
+    trigger_error(curl_error($ch));
+}
+
+curl_close($ch);
+```
+
+# Extended usage <a name="ext"></a>
+
+## Performing special tasks <a name="ext"></a>
+
+A Service inherits four functions `get`, `post`, `put` and `delete` from the abstract WebService class by default. Those are perfect to perform CRUD actions on a Database. But what if you need a Service that should do some special tasks? In such a case you can use the HTTP request method `PATCH` and provide the name of the action in the URI.
+
+Below is an example of a caluculation Service that multiplies two numbers:
+
+Usage: `PATCH domain.tld/[version]/[service]/[action]`
+```php
+$ch = curl_init("http://localhost:2400/v1/Calculator/multiply");
+$body = [
+    "a" => 12,
+    "b" => 2.5
+];
+$ch = curl_init($url);
+curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PATCH");
+curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($body));
 curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
 curl_setopt($ch, CURLOPT_USERPWD, "$username:$password");
 curl_setopt($ch, CURLOPT_HEADER, true);
